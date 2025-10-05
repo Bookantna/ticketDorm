@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "69371267-933f-4ac3-b1db-79f9da2a0adc",
-		"name": "it-support-ticket-system",
+		"_postman_id": "d5c7e796-10e9-49b3-b736-b5e8a8fc87a5",
+		"name": "Ticket-Dorm-collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38716645"
+		"_exporter_id": "17306591"
 	},
 	"item": [
 		{
@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"tupac\",\r\n    \"password\":\"tupac123\",\r\n    \"email\":\"tupac@shakur.com\",\r\n    \"role\":\"EMPLOYEE\"\r\n}",
+							"raw": "{\r\n  \"user\": {\r\n    \"username\": \"jrenter\", // 7 characters, fixed\r\n    \"password\": \"mySecurePassword123\",\r\n    \"email\": \"john@example.com\",\r\n    \"role\": \"RENTER\"\r\n  },\r\n  \"inviteCode\": \"16DC368A\" \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,13 +24,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users",
+							"raw": "http://localhost:8080/api/users",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users"
 							]
 						}
@@ -44,7 +45,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"tupac\",\r\n    \"password\":\"tupac123\"\r\n}",
+							"raw": "{\r\n    \"username\":\"tupac\",\r\n    \"password\":\"tupac123'\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
