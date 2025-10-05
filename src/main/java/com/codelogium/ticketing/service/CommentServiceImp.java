@@ -30,6 +30,13 @@ public class CommentServiceImp implements CommentService {
     private AuditLogRepository auditLogRepository;
     private UserRepository userRepository; // only for validation
 
+    public CommentServiceImp(CommentRepository commentRepository, TicketRepository ticketRepository, AuditLogRepository auditLogRepository, UserRepository userRepository) {
+        this.commentRepository = commentRepository;
+        this.ticketRepository = ticketRepository;
+        this.auditLogRepository = auditLogRepository;
+        this.userRepository = userRepository;
+    }
+
     @Override
     public Comment createComment(Long ticketId, Long userId, Comment newComment) {
         User author = UserServiceImp.unwrapUser(userId, userRepository.findById(userId));

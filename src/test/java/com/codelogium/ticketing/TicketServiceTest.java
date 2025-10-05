@@ -52,10 +52,10 @@ public class TicketServiceTest {
     void setUp() throws Exception {
         ticketService = new TicketServiceImp(ticketRepository, userRepository, auditLogRepository);
 
-        testUser = new User(1L, "tupac", "tupac123", "tupac@gmail.com", UserRole.EMPLOYEE, null, null);
+        //testUser = new User("tupac", "tupac123", "tupac@gmail.com", UserRole.RENTER, null, null, null);
 
         testTicket = new Ticket(1L, "Discrepancy while login", "Error 500 keeps pop up while password is correct",
-                Instant.now(), Status.NEW, Category.NETWORK, Priority.HIGH, testUser, null);
+                Instant.now(), Status.NEW, Category.INTERNET, Priority.HIGH, testUser, null);
 
         testAuditLog = new AuditLog(1L, testTicket.getId(), null, testUser.getId(), "TICKET_CREATED", null,
                 testTicket.getStatus().toString(), Instant.now());
@@ -73,7 +73,7 @@ public class TicketServiceTest {
         // Mock
         // Status is null in order to test if it being set while ticket saving
         Ticket ticketToCreate = new Ticket(testTicket.getId(), "Discrepancy while login",
-                "Error 500 keeps pop up while password is correct", Instant.now(), null, Category.NETWORK,
+                "Error 500 keeps pop up while password is correct", Instant.now(), null, Category.INTERNET,
                 Priority.HIGH, testUser, null);
 
         when(userRepository.findById(testUser.getId())).thenReturn(Optional.of(testUser));

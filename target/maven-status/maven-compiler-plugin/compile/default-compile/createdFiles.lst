@@ -5,14 +5,19 @@ com/codelogium/ticketing/web/CommentController.class
 com/codelogium/ticketing/repository/CommentRepository.class
 com/codelogium/ticketing/entity/User.class
 com/codelogium/ticketing/exception/ErrorResponse.class
+com/codelogium/ticketing/entity/UserRoom.class
 com/codelogium/ticketing/dto/TicketInfoUpdateDTO.class
 com/codelogium/ticketing/security/rbac/CustomUserDetailsImp.class
 com/codelogium/ticketing/util/EntityUtils.class
 com/codelogium/ticketing/entity/enums/Priority.class
+com/codelogium/ticketing/repository/RoomRepository.class
 com/codelogium/ticketing/entity/AuditLog.class
 com/codelogium/ticketing/entity/enums/Category.class
 com/codelogium/ticketing/security/filter/ExceptionHandlerFilter.class
+com/codelogium/ticketing/entity/Room.class
 com/codelogium/ticketing/security/handler/CustomAccessDeniedHandler.class
+com/codelogium/ticketing/repository/UserRoomRepository.class
+com/codelogium/ticketing/config/DataInitializer.class
 com/codelogium/ticketing/security/handler/CustomAuthenticationEntryPoint.class
 com/codelogium/ticketing/repository/AuditLogRepository.class
 com/codelogium/ticketing/TicketingApplication.class
@@ -30,6 +35,7 @@ com/codelogium/ticketing/security/filter/JWTAuthorizationFilter.class
 com/codelogium/ticketing/entity/enums/Status.class
 com/codelogium/ticketing/ApplicationExceptionHandler.class
 com/codelogium/ticketing/service/CommentService.class
+com/codelogium/ticketing/dto/UserRegistrationRequest.class
 com/codelogium/ticketing/repository/UserRepository.class
 com/codelogium/ticketing/web/TicketController.class
 com/codelogium/ticketing/repository/TicketRepository.class

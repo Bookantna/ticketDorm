@@ -75,6 +75,9 @@ public class Ticket {
         this.comments = comments;
     }
 
+    public Ticket() {
+    }
+
     public Long getId() {
         return id;
     }

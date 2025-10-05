@@ -44,6 +44,9 @@ public class AuditLog {
         this.timestamp = timestamp;
     }
 
+    public AuditLog() {
+    }
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     private Instant timestamp = Instant.now(); // when the change happened
 

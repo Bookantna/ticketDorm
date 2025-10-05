@@ -1,11 +1,13 @@
 package com.codelogium.ticketing.web;
 
+import com.codelogium.ticketing.dto.UserRegistrationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.codelogium.ticketing.entity.User;
+import com.codelogium.ticketing.entity.Room;
 import com.codelogium.ticketing.exception.ErrorResponse;
 import com.codelogium.ticketing.service.UserService;
 
@@ -22,7 +24,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @Tag(name = "User Controller", description = "Manages user operations")
-@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
     private final UserService userService;
@@ -36,10 +38,16 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Bad Request: Unsuccessful submission")
     })
     @Operation(summary = "Create User", description = "Registers a new user")
-    @PostMapping
-    public ResponseEntity<String> registerUser(@RequestBody @Valid User user) {
-        userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody @Valid UserRegistrationRequest request) {
+
+        // Split the DTO into its arguments and call the service method
+        User registeredUser = userService.createUser(
+                request.getUser(),
+                request.getInviteCode() // Calls the generated getter method
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully with ID: " + registeredUser.getId());
     }
 
     // TODO: don't send the whole user entity to the client since there's password

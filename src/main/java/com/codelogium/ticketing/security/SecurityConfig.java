@@ -45,12 +45,22 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Public paths
                         .requestMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
+
+                        // FIX: Use wildcard to permit ALL POST requests under /api/users (e.g., /register)
+                        .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+
+                        // Whitelist paths that are part of the root path, just in case
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/authenticate").permitAll()
+
+                        // Error handling and documentation paths
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui/*", "/api-docs/**", "/h2-console/*").permitAll()
+
                         // Protected paths
-                        .requestMatchers(HttpMethod.PATCH, "/users/{userId}/tickets/{ticketId}/status").hasAuthority("IT_SUPPORT")
-                        .requestMatchers("/users/{userId}/tickets/{ticketId}/info").hasAuthority("EMPLOYEE")
+                        .requestMatchers(HttpMethod.PATCH, "/users/{userId}/tickets/{ticketId}/status").hasAuthority("MECHANIC")
+                        .requestMatchers(HttpMethod.PATCH, "/users/{userId}/tickets/{ticketId}/status").hasAuthority("STAFF")
+                        .requestMatchers("/users/{userId}/tickets/{ticketId}/info").hasAuthority("RENTER")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handler -> {
