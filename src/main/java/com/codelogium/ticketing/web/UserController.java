@@ -1,13 +1,14 @@
 package com.codelogium.ticketing.web;
 
+import com.codelogium.ticketing.dto.UserDTO;
 import com.codelogium.ticketing.dto.UserRegistrationRequest;
+import com.codelogium.ticketing.mapper.UserMapper; // <-- 1. Import the Mapper
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.codelogium.ticketing.entity.User;
-import com.codelogium.ticketing.entity.Room;
 import com.codelogium.ticketing.exception.ErrorResponse;
 import com.codelogium.ticketing.service.UserService;
 
@@ -28,9 +29,12 @@ import lombok.AllArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper; // <-- 2. Inject the Mapper
 
-    public UserController(UserService userService) {
+
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @ApiResponses(value = {
@@ -41,31 +45,38 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody @Valid UserRegistrationRequest request) {
 
-        // Split the DTO into its arguments and call the service method
         User registeredUser = userService.createUser(
                 request.getUser(),
-                request.getInviteCode() // Calls the generated getter method
+                request.getInviteCode()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully with ID: " + registeredUser.getId());
     }
 
-    // TODO: don't send the whole user entity to the client since there's password
+    // --- FIX APPLIED HERE ---
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User successfully retrieved", content = @Content(schema = @Schema(implementation = User.class))),
+            // 3. Update the schema to reference UserDTO
+            @ApiResponse(responseCode = "200", description = "User successfully retrieved", content = @Content(schema = @Schema(implementation = UserDTO.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(ref = "#/components/responses/401") // Gloabl unauthorized response
+            @ApiResponse(ref = "#/components/responses/401")
     })
     @Operation(summary = "Get User", description = "Retrieves a user by ID")
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> retrieveUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.retrieveUser(userId));
+    @GetMapping("/{userId}") // <-- 4. Add the missing @GetMapping annotation
+    public ResponseEntity<UserDTO> retrieveUser(@PathVariable Long userId) {
+
+        // 5. Retrieve the JPA Entity
+        User userEntity = userService.retrieveUser(userId);
+
+        // 6. Convert the Entity to the DTO using the injected mapper
+        UserDTO userDto = userMapper.toDTO(userEntity);
+
+        return ResponseEntity.ok(userDto);
     }
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "User successfully deleted"),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "401", ref = "#/components/responses/401") // Gloabl 401 response
+            @ApiResponse(responseCode = "401", ref = "#/components/responses/401")
     })
     @Operation(summary = "Delete User", description = "Deletes a user by ID")
     @DeleteMapping("/{userId}")

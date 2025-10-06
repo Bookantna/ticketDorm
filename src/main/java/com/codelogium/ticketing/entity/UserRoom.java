@@ -1,5 +1,6 @@
 package com.codelogium.ticketing.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class UserRoom {
     // Many UserRoom entries map to one User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     // Many UserRoom entries map to one Room

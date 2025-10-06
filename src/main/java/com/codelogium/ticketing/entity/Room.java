@@ -1,5 +1,6 @@
 package com.codelogium.ticketing.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -29,6 +30,9 @@ public class Room {
     private String inviteCode;
 
     // --- CONSTRUCTORS ---
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TicketRoom> ticketAssociations = new HashSet<>();
 
     // REQUIRED by JPA/Hibernate: Public no-argument constructor
     public Room() {

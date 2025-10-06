@@ -3,19 +3,17 @@ package com.codelogium.ticketing.service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.codelogium.ticketing.dto.TicketCreationRequest;
+import com.codelogium.ticketing.entity.*;
+import com.codelogium.ticketing.repository.*;
 import org.springframework.stereotype.Service;
 
 import com.codelogium.ticketing.dto.TicketInfoUpdateDTO;
 import com.codelogium.ticketing.dto.TicketStatusUpdateDTO;
-import com.codelogium.ticketing.entity.AuditLog;
-import com.codelogium.ticketing.entity.Ticket;
-import com.codelogium.ticketing.entity.User;
 import com.codelogium.ticketing.entity.enums.Status;
 import com.codelogium.ticketing.exception.ResourceNotFoundException;
-import com.codelogium.ticketing.repository.AuditLogRepository;
-import com.codelogium.ticketing.repository.TicketRepository;
-import com.codelogium.ticketing.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -30,23 +28,46 @@ public class TicketServiceImp implements TicketService {
     private TicketRepository ticketRepository;
     private UserRepository userRepository;
     private AuditLogRepository auditLogRepository;
+    private RoomRepository roomRepository;
+    private TicketRoomRepository ticketRoomRepository;
 
-    public TicketServiceImp(TicketRepository ticketRepository, UserRepository userRepository, AuditLogRepository auditLogRepository) {
+    public TicketServiceImp(TicketRepository ticketRepository, UserRepository userRepository, AuditLogRepository auditLogRepository, RoomRepository roomRepository, TicketRoomRepository ticketRoomRepository) {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.auditLogRepository = auditLogRepository;
+        this.roomRepository = roomRepository;
+        this.ticketRoomRepository = ticketRoomRepository;
     }
 
     @Override
-    public Ticket createTicket(Long userId, Ticket newTicket) {
-        User user = UserServiceImp.unwrapUser(userId, userRepository.findById(userId));
-        newTicket.setCreator(user);
-        newTicket.setStatus(Status.NEW); // default status
-        newTicket.setCreationDate(Instant.now());
+    @Transactional
+    public Ticket createTicket(Long userId, TicketCreationRequest request) {
+        // 1. Fetch Creator User Entity
+        // NOTE: UserServiceImp.unwrapUser is assumed to handle the Optional and exception.
+        User creator = UserServiceImp.unwrapUser(userId, userRepository.findById(userId));
 
-        Ticket createdTicket = ticketRepository.save(newTicket);
+        // 2. Map DTO to Entity and set server-managed fields
+        Ticket ticketEntity = new Ticket();
+        ticketEntity.setTitle(request.getTitle());
+        ticketEntity.setDescription(request.getDescription());
+        ticketEntity.setImageUrl(request.getImageUrl());
+        ticketEntity.setCategory(request.getCategory());
+        ticketEntity.setPriority(request.getPriority());
 
-        // Log ticket creation
+        // Set server-managed defaults
+        ticketEntity.setCreator(creator);
+        ticketEntity.setStatus(Status.NEW); // Default status set by server
+        ticketEntity.setCreationDate(Instant.now());
+
+        // 3. Save the Ticket Entity to persist it (gets ID before associations)
+        Ticket createdTicket = ticketRepository.save(ticketEntity);
+
+        // 4. Handle many-to-many relationship linking rooms
+        if (request.getRoomNumbers() != null && !request.getRoomNumbers().isEmpty()) {
+            linkTicketToRooms(createdTicket, request.getRoomNumbers());
+        }
+
+        // 5. Log ticket creation
         auditLogRepository.save(new AuditLog(
                 null,
                 createdTicket.getId(),
@@ -57,7 +78,7 @@ public class TicketServiceImp implements TicketService {
                 createdTicket.getStatus().toString(),
                 Instant.now()));
 
-        auditLogRepository.flush(); // Ensure immediate persistence
+        auditLogRepository.flush();
 
         return createdTicket;
     }
@@ -114,15 +135,28 @@ public class TicketServiceImp implements TicketService {
         }
         return savedTicket;
     }
+    private void linkTicketToRooms(Ticket ticket, List<String> roomNumbers) {
+        // Find rooms using the list of room numbers
+        List<Room> rooms = roomRepository.findAllByRoomNumberIn(roomNumbers);
+
+        if (rooms.size() != roomNumbers.size()) {
+            // Throws if one or more room numbers in the request are invalid or not found.
+            throw new ResourceNotFoundException("One or more rooms specified were not found or room numbers were invalid.");
+        }
+
+        // Create and save TicketRoom associations
+        List<TicketRoom> associations = rooms.stream()
+                .map(room -> new TicketRoom(null, ticket, room))
+                .collect(Collectors.toList());
+
+        // Persist the join entities within the active transaction
+        ticketRoomRepository.saveAll(associations);
+    }
 
     @Override
     public Ticket retrieveTicket(Long ticketId, Long userId) {
-
-        // validate user exists
-        validateUser(userId);
-        
-        // ensure relationship user->ticket and retrieved ticket
-        return unwrapTicket(ticketId, ticketRepository.findByIdAndCreatorId(ticketId, userId));
+        return ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with ID: " + ticketId));
     }
 
     @Override

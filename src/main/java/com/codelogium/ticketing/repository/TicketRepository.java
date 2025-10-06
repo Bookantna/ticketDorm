@@ -16,7 +16,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Optional<Ticket> findByIdAndCreatorId(Long ticketId, Long userId);
 
     List<Ticket> findByCreatorId(Long userId);
-    // Find creator by ticket id to validates user in this and sub-level
     @Query("SELECT t.creator FROM Ticket t WHERE t.id = :ticketId")
     Optional<User> findCreatorByTicket(@Param("ticketId") Long ticketId);
 

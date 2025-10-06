@@ -2,27 +2,20 @@ package com.codelogium.ticketing.entity;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.codelogium.ticketing.dto.TicketRoomDTO;
 import com.codelogium.ticketing.entity.enums.Category;
 import com.codelogium.ticketing.entity.enums.Priority;
 import com.codelogium.ticketing.entity.enums.Status;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -63,7 +56,16 @@ public class Ticket {
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
-    public Ticket(Long id, String title, String description, Instant creationDate, Status status, Category category, Priority priority, User creator, List<Comment> comments) {
+    @Column(length = 2048) // A long string is appropriate for a URL
+    private String imageUrl; // Stores the URL/path to the image file
+
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<TicketRoom> roomAssociations = new HashSet<>();
+
+
+
+    public Ticket(Long id, String title, String description, Instant creationDate, Status status, Category category, Priority priority, User creator, List<Comment> comments, String imageUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -73,6 +75,7 @@ public class Ticket {
         this.priority = priority;
         this.creator = creator;
         this.comments = comments;
+        this.imageUrl = imageUrl;
     }
 
     public Ticket() {
@@ -148,5 +151,21 @@ public class Ticket {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Set<TicketRoom> getRoomAssociations() {
+        return roomAssociations;
+    }
+
+    public void setRoomAssociations(Set<TicketRoom> roomAssociations) {
+        this.roomAssociations = roomAssociations;
     }
 }

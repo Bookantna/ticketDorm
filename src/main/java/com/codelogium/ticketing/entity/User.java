@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.codelogium.ticketing.entity.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -48,6 +49,7 @@ public class User {
 
     // --- Many-to-Many Association via UserRoom Join Entity ---
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<UserRoom> memberships = new HashSet<>();
 
     // --- CONSTRUCTORS ---

@@ -1,5 +1,8 @@
 package com.codelogium.ticketing.web;
 
+import com.codelogium.ticketing.dto.TicketCreationRequest;
+import com.codelogium.ticketing.dto.TicketDTO;
+import com.codelogium.ticketing.mapper.TicketMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,34 +39,51 @@ import java.util.List;
 public class TicketController {
 
     private final TicketService ticketService;
+    private final TicketMapper ticketMapper;
 
-    public TicketController(TicketService ticketService) {
+    public TicketController(TicketService ticketService, TicketMapper ticketMapper) {
         this.ticketService = ticketService;
+        this.ticketMapper = ticketMapper;
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Ticket successfully created", content = @Content(schema = @Schema(implementation = Ticket.class))),
-            @ApiResponse(responseCode = "400", description = "Bad Request: unsuccessful submission"),
-            @ApiResponse(ref = "#/components/responses/401"),
-            @ApiResponse(ref = "#/components/responses/403")
-    })
     @Operation(summary = "Create Ticket", description = "Creates a new support ticket")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Ticket created successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request: Invalid input"),
+            @ApiResponse(ref = "#/components/responses/401")
+    })
     @PreAuthorize("hasAuthority('RENTER')")
     @PostMapping
-    public ResponseEntity<String> createTicket(@PathVariable Long userId, @RequestBody @Valid Ticket newTicket) {
-        ticketService.createTicket(userId, newTicket);
+    // Changed @RequestBody to use TicketCreationRequest
+    public ResponseEntity<String> createTicket(@PathVariable Long userId, @RequestBody @Valid TicketCreationRequest request) {
+
+        // The service layer should handle converting the DTO to a Ticket entity
+        // and setting server-side properties like creationDate and creator (based on userId).
+        ticketService.createTicket(userId, request);
+
         return ResponseEntity.status(HttpStatus.CREATED).body("Ticket created successfully");
     }
 
+    // 2. REVISED RETRIEVE METHOD: Returns TicketDTO
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ticket successfully retrieved", content = @Content(schema = @Schema(implementation = Ticket.class))),
+            // Updated schema reference to the safe TicketDTO
+            @ApiResponse(responseCode = "200", description = "Ticket successfully retrieved", content = @Content(schema = @Schema(implementation = TicketDTO.class))),
             @ApiResponse(responseCode = "404", description = "Ticket not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(ref = "#/components/responses/401")
     })
     @Operation(summary = "Get Ticket", description = "Retrieves a ticket by ID")
     @GetMapping("/{ticketId}")
-    public ResponseEntity<Ticket> retrieveTicket(@PathVariable Long userId, @PathVariable Long ticketId) {
-        return ResponseEntity.ok(ticketService.retrieveTicket(ticketId, userId));
+    // Changed return type from Ticket to TicketDTO
+    public ResponseEntity<TicketDTO> retrieveTicket(@PathVariable Long userId, @PathVariable Long ticketId) {
+
+        // 1. Retrieve the JPA Entity from the service
+        Ticket ticketEntity = ticketService.retrieveTicket(ticketId, userId);
+
+        // 2. Convert the Entity to the DTO using the injected mapper
+        TicketDTO ticketDto = ticketMapper.toDto(ticketEntity);
+
+        // 3. Return the DTO
+        return ResponseEntity.ok(ticketDto);
     }
 
     @ApiResponses(value = {
