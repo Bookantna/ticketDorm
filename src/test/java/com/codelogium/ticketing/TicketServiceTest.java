@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import com.codelogium.ticketing.dto.TicketCreationRequest;
 import com.codelogium.ticketing.repository.*;
+import com.codelogium.ticketing.service.FileStorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,13 +50,31 @@ public class TicketServiceTest {
     @Mock
     private RoomRepository roomRepository;
 
+    @Mock
+    private FileStorageService fileStorageService;
+
+
     private User testUser;
     private Ticket testTicket;
     private AuditLog testAuditLog;
 
+
+    public TicketServiceTest(TicketService ticketService, TicketRepository ticketRepository, AuditLogRepository auditLogRepository, UserRepository userRepository, TicketRoomRepository ticketRoomRepository, RoomRepository roomRepository, FileStorageService fileStorageService, User testUser, Ticket testTicket, AuditLog testAuditLog) {
+        this.ticketService = ticketService;
+        this.ticketRepository = ticketRepository;
+        this.auditLogRepository = auditLogRepository;
+        this.userRepository = userRepository;
+        this.ticketRoomRepository = ticketRoomRepository;
+        this.roomRepository = roomRepository;
+        this.fileStorageService = fileStorageService;
+        this.testUser = testUser;
+        this.testTicket = testTicket;
+        this.testAuditLog = testAuditLog;
+    }
+
     @BeforeEach
     void setUp() throws Exception {
-        ticketService = new TicketServiceImp(ticketRepository, userRepository, auditLogRepository, roomRepository, ticketRoomRepository);
+        ticketService = new TicketServiceImp(ticketRepository, userRepository, auditLogRepository, roomRepository, ticketRoomRepository, fileStorageService);
 
         //testUser = new User("tupac", "tupac123", "tupac@gmail.com", UserRole.RENTER, null, null, null);
 

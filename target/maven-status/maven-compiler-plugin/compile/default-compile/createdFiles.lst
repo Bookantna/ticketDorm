@@ -9,6 +9,7 @@ com/codelogium/ticketing/dto/TicketInfoUpdateDTO.class
 com/codelogium/ticketing/security/rbac/CustomUserDetailsImp.class
 com/codelogium/ticketing/util/EntityUtils.class
 com/codelogium/ticketing/entity/enums/Priority.class
+com/codelogium/ticketing/service/FileStorageServiceImp.class
 com/codelogium/ticketing/repository/RoomRepository.class
 com/codelogium/ticketing/entity/AuditLog.class
 com/codelogium/ticketing/mapper/TicketMapper.class
@@ -31,12 +32,15 @@ com/codelogium/ticketing/service/UserServiceImp.class
 com/codelogium/ticketing/security/filter/AuthenticationFilter.class
 com/codelogium/ticketing/repository/CommentRepository.class
 com/codelogium/ticketing/entity/User.class
+com/codelogium/ticketing/service/FileStorageService.class
+com/codelogium/ticketing/repository/RoomDetailsRepository.class
 com/codelogium/ticketing/security/filter/ExceptionHandlerFilter.class
 com/codelogium/ticketing/repository/UserRoomRepository.class
 com/codelogium/ticketing/security/handler/CustomAuthenticationEntryPoint.class
 com/codelogium/ticketing/dto/TicketCreationRequest.class
 com/codelogium/ticketing/repository/AuditLogRepository.class
 com/codelogium/ticketing/TicketingApplication.class
+com/codelogium/ticketing/entity/RoomDetails.class
 com/codelogium/ticketing/exception/ResourceNotFoundException.class
 com/codelogium/ticketing/dto/TicketRoomDTO.class
 com/codelogium/ticketing/repository/TicketRoomRepository.class

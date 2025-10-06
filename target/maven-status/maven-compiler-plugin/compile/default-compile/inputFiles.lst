@@ -17,6 +17,7 @@
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/entity/AuditLog.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/entity/Comment.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/entity/Room.java
+/Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/entity/RoomDetails.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/entity/Ticket.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/entity/TicketRoom.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/entity/User.java
@@ -31,6 +32,7 @@
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/mapper/UserMapper.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/repository/AuditLogRepository.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/repository/CommentRepository.java
+/Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/repository/RoomDetailsRepository.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/repository/RoomRepository.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/repository/TicketRepository.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/repository/TicketRoomRepository.java
@@ -48,6 +50,8 @@
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/security/rbac/CustomUserDetailsServiceImp.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/service/CommentService.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/service/CommentServiceImp.java
+/Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/service/FileStorageService.java
+/Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/service/FileStorageServiceImp.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/service/TicketService.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/service/TicketServiceImp.java
 /Users/thanawatueasiripracha/Desktop/KKU/ticket_dorm/src/main/java/com/codelogium/ticketing/service/UserService.java

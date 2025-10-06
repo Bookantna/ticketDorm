@@ -1,7 +1,5 @@
 package com.codelogium.ticketing.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.security.MessageDigest;
@@ -34,6 +32,9 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TicketRoom> ticketAssociations = new HashSet<>();
 
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private RoomDetails roomDetails;
+
     // REQUIRED by JPA/Hibernate: Public no-argument constructor
     public Room() {
         this.memberships = new HashSet<>();
@@ -46,12 +47,13 @@ public class Room {
         this.inviteCode = generateInviteCode(roomNumber);
     }
 
-    // All-arguments constructor
-    public Room(Long id, Set<UserRoom> memberships, String roomNumber, String inviteCode) {
+    public Room(Long id, Set<UserRoom> memberships, String roomNumber, String inviteCode, Set<TicketRoom> ticketAssociations, RoomDetails roomDetails) {
         this.id = id;
         this.memberships = memberships;
         this.roomNumber = roomNumber;
         this.inviteCode = inviteCode;
+        this.ticketAssociations = ticketAssociations;
+        this.roomDetails = roomDetails;
     }
 
     // --- JPA LIFECYCLE CALLBACKS ---
@@ -125,5 +127,21 @@ public class Room {
 
     public void setInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
+    }
+
+    public Set<TicketRoom> getTicketAssociations() {
+        return ticketAssociations;
+    }
+
+    public void setTicketAssociations(Set<TicketRoom> ticketAssociations) {
+        this.ticketAssociations = ticketAssociations;
+    }
+
+    public RoomDetails getRoomDetails() {
+        return roomDetails;
+    }
+
+    public void setRoomDetails(RoomDetails roomDetails) {
+        this.roomDetails = roomDetails;
     }
 }

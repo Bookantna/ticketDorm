@@ -30,27 +30,38 @@ public class TicketServiceImp implements TicketService {
     private AuditLogRepository auditLogRepository;
     private RoomRepository roomRepository;
     private TicketRoomRepository ticketRoomRepository;
+    private FileStorageService fileStorageService;
 
-    public TicketServiceImp(TicketRepository ticketRepository, UserRepository userRepository, AuditLogRepository auditLogRepository, RoomRepository roomRepository, TicketRoomRepository ticketRoomRepository) {
+    public TicketServiceImp(TicketRepository ticketRepository, UserRepository userRepository, AuditLogRepository auditLogRepository, RoomRepository roomRepository, TicketRoomRepository ticketRoomRepository, FileStorageService fileStorageService) {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.auditLogRepository = auditLogRepository;
         this.roomRepository = roomRepository;
         this.ticketRoomRepository = ticketRoomRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
     @Transactional
     public Ticket createTicket(Long userId, TicketCreationRequest request) {
+
+        // --- 0. PROCESS IMAGE UPLOAD (Base64 -> URL) ---
+        String finalImageUrl = request.getImageUrl();
+        if (finalImageUrl != null && !finalImageUrl.isEmpty()) {
+            // Upload the Base64 data and get the persistent URL
+            finalImageUrl = fileStorageService.uploadImageFromBase64(request.getImageUrl());
+        }
+        // ---------------------------------------------------
+
         // 1. Fetch Creator User Entity
-        // NOTE: UserServiceImp.unwrapUser is assumed to handle the Optional and exception.
         User creator = UserServiceImp.unwrapUser(userId, userRepository.findById(userId));
 
         // 2. Map DTO to Entity and set server-managed fields
         Ticket ticketEntity = new Ticket();
         ticketEntity.setTitle(request.getTitle());
         ticketEntity.setDescription(request.getDescription());
-        ticketEntity.setImageUrl(request.getImageUrl());
+        // Use the newly generated URL (or null)
+        ticketEntity.setImageUrl(finalImageUrl);
         ticketEntity.setCategory(request.getCategory());
         ticketEntity.setPriority(request.getPriority());
 
