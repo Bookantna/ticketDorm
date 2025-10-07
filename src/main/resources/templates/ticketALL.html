@@ -104,23 +104,14 @@
             <a th:href="@{/}" class="home-btn">
                 Home
             </a>
-            <h1>My Tickets (User ID: <span th:text="${currentUserId}"></span>)</h1>
+            <h1>ALL Ticket <span th:text="${currentUserId}"></span></h1>
         </div>
 
-        <!-- Action Buttons (All Tickets and Create) -->
+        <!-- Header Right: Action Buttons (Staff/Mechanic) -->
         <div class="header-right">
-            <!-- NEW: All Tickets Button - Visible only to Staff and Mechanic -->
-            <a th:href="@{/tickets/all}" class="all-tickets-btn"
-               th:if="${role == 'STAFF' or role == 'MECHANIC'}">
-                All Tickets
-            </a>
-
-            <!-- Create Ticket Button -->
-            <a th:href="@{/tickets/create}" class="create-btn">
-                + Create New Ticket
-            </a>
         </div>
     </div>
+
 
     <!-- Display Flash Messages -->
     <div th:if="${successMessage}" class="message success" th:text="${successMessage}"></div>
@@ -128,7 +119,7 @@
 
     <!-- FIX 1: Use #lists.isEmpty(tickets) for null-safe check -->
     <div th:if="${#lists.isEmpty(tickets)}" class="empty-message">
-        You haven't submitted any tickets yet. Click the button above to create one.
+        There is not Ticket yet.
     </div>
 
     <!-- FIX 2: Use #lists.isEmpty(tickets) for null-safe check -->

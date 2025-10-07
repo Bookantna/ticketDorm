@@ -14,6 +14,7 @@ public interface TicketService {
     Ticket updateTicketInfo(Long ticketId, Long userId, TicketInfoUpdateDTO dto);
     Ticket updateTicketStatus(Long ticketId, Long userId, TicketStatusUpdateDTO dto);
     Ticket retrieveTicket(Long ticketId, Long userId);
+    List<Ticket> retrieveALLTicket();
     void removeTicket(Long ticketId, Long userid);
     List<Ticket> retrieveTicketsByCreator(Long userId);
 
@@ -21,5 +22,5 @@ public interface TicketService {
     List<AuditLog> retrieveAuditLogs(Long ticketId, Long userId);
 
     void acknowledgeTicket(Long ticketId, Long userId);
-    void solveTicket(Long ticketId);
+    void solveTicket(Long ticketId, Long userId);
 }

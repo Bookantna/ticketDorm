@@ -112,7 +112,8 @@ public class TicketWebController {
 
 
        model.addAttribute("tickets", tickets);
-       model.addAttribute("currentUserId", userService.retrieveUser(cookieUsername).getId());
+        model.addAttribute("role", cookieRoles);
+        model.addAttribute("currentUserId", userService.retrieveUser(cookieUsername).getId());
 
         return "tickets"; // Display the tickets.html template
     }
@@ -339,6 +340,109 @@ public class TicketWebController {
         return "ticket-details"; // Display the new detail template
     }
 
+    @GetMapping("/acknowledge/{id}")
+    public String acknowledgeTicket(Model model,@PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String username = "Guest (via Authentication)"; // Fallback to authentication if cookies fail
+        String roles = "N/A (via Authentication)";
+        String jwtToken = "No token found";
+
+        // Variables to store cookie values
+        String cookieUsername = null;
+        String cookieRoles = null;
+        String cookieJwtToken = null;
+
+        // Iterate through cookies to find USER_NAME, USER_ROLES, and JWT_TOKEN
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                switch (cookie.getName()) {
+                    case "JWT_TOKEN":
+                        cookieJwtToken = cookie.getValue();
+                        break;
+                    case "USER_NAME":
+                        cookieUsername = cookie.getValue();
+                        break;
+                    case "USER_ROLES":
+                        cookieRoles = cookie.getValue();
+                        break;
+                }
+            }
+        }
 
 
+        Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
+
+        try {
+            // Service method updates status to IN_PROGRESS
+            ticketService.acknowledgeTicket(id,userId);
+            model.addAttribute("role", cookieRoles);
+            redirectAttributes.addFlashAttribute("successMessage", "Ticket #" + id + " status set to IN_PROGRESS. ✅");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to acknowledge Ticket #" + id + ": " + e.getMessage());
+        }
+        // Redirect back to the details page
+        return "redirect:/tickets/details/" + id;
+    }
+
+    @GetMapping("/solve/{id}")
+    public String solveTicket(Model model,@PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        String username = "Guest (via Authentication)"; // Fallback to authentication if cookies fail
+        String roles = "N/A (via Authentication)";
+        String jwtToken = "No token found";
+
+        // Variables to store cookie values
+        String cookieUsername = null;
+        String cookieRoles = null;
+        String cookieJwtToken = null;
+
+        // Iterate through cookies to find USER_NAME, USER_ROLES, and JWT_TOKEN
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                switch (cookie.getName()) {
+                    case "JWT_TOKEN":
+                        cookieJwtToken = cookie.getValue();
+                        break;
+                    case "USER_NAME":
+                        cookieUsername = cookie.getValue();
+                        break;
+                    case "USER_ROLES":
+                        cookieRoles = cookie.getValue();
+                        break;
+                }
+            }
+        }
+
+
+        Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
+
+        try {
+            // Service method updates status to RESOLVED
+            ticketService.solveTicket(id,userId);
+            model.addAttribute("role", cookieRoles);
+            redirectAttributes.addFlashAttribute("successMessage", "Ticket #" + id + " status set to RESOLVED. 🎉");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to mark Ticket #" + id + " as solved: " + e.getMessage());
+        }
+        // Redirect back to the details page
+        return "redirect:/tickets/details/" + id;
+    }
+
+    @GetMapping("/all") // Updated mapping to use the base path /tickets/
+    public String showAllTicketsList(Model model, Authentication authentication, HttpServletRequest request) {
+
+
+
+        // Pass an empty DTO to bind the form inputs to
+        // Pass the user ID for hidden form fields or security checks
+
+        List<TicketDTO> tickets = ticketService.retrieveALLTicket()
+                .stream()
+                .map(ticketMapper::toDto)
+                .toList();
+
+
+        model.addAttribute("tickets", tickets);
+
+        return "ticketALL"; // Display the tickets.html template
+    }
 }

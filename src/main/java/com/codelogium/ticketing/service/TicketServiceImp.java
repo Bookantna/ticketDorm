@@ -231,10 +231,30 @@ public class TicketServiceImp implements TicketService {
         return optionalTicket.orElseThrow(() -> new ResourceNotFoundException(ticketId, Ticket.class));
     }
 
-    void acknowledgeTicket(Long ticketId){
+    public void acknowledgeTicket(Long ticketId, Long userId){
+
+        validateUser(userId);
+
+        // Get the ticket
+        Ticket ticket = unwrapTicket(ticketId, ticketRepository.findByIdAndCreatorId(ticketId, userId));
+        ticket.setStatus(Status.IN_PROGRESS);
+
+        ticketRepository.save(ticket);
 
     }
-    void solveTicket(Long ticketId){
+    public void solveTicket(Long ticketId, Long userId){
 
+        validateUser(userId);
+
+        // Get the ticket
+        Ticket ticket = unwrapTicket(ticketId, ticketRepository.findByIdAndCreatorId(ticketId, userId));
+        ticket.setStatus(Status.RESOLVED);
+
+        ticketRepository.save(ticket);
+    }
+
+    @Override
+    public List<Ticket> retrieveALLTicket() {
+        return ticketRepository.findAll();
     }
 }
