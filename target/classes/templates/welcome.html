@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Ticketing System</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-green': '#10b981',
+                        'secondary-gray': '#f3f4f6',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-secondary-gray min-h-screen flex items-center justify-center p-4">
+
+<div class="w-full max-w-lg bg-white p-8 md:p-10 rounded-xl shadow-2xl">
+
+    <div class="text-center">
+        <svg class="w-16 h-16 mx-auto text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-4 mb-2">
+            Welcome Back!
+        </h1>
+
+        <p class="text-gray-600 mb-6">
+            You have successfully logged in to the Ticketing System.
+        </p>
+    </div>
+
+    <div class="space-y-4" sec:authorize="isAuthenticated()">
+        <div class="bg-primary-green/10 p-4 rounded-lg border border-primary-green/30">
+            <p class="text-sm font-semibold text-primary-green">User Details:</p>
+            <p class="text-gray-700 mt-1">
+                Username:
+                <span class="font-medium" th:text="${username ?: '[Username Placeholder]'}"></span>
+            </p>
+            <p class="text-gray-700">
+                Role(s):
+                <span class="font-medium text-sm rounded-full bg-primary-green px-2 py-0.5 text-white"
+                      th:text="${role ?: '[Role Placeholder]'}"></span>
+            </p>
+
+            <!-- JWT Token display -->
+            <p class="text-gray-700 mt-3 font-semibold">JWT Token:</p>
+            <p class="break-all bg-gray-100 p-2 rounded-lg text-sm"
+               th:text="${jwtToken ?: 'No token found'}">[JWT_TOKEN]</p>
+        </div>
+
+        <div class="text-center pt-4">
+            <p class="text-sm text-gray-500 mb-4">Ready to manage your tickets?</p>
+            <a th:href="@{/tickets/list}" class="inline-block px-6 py-3 bg-primary-green text-white font-bold rounded-lg shadow-lg hover:bg-green-700 transition duration-150 transform hover:scale-[1.02]">
+                Go to Dashboard
+            </a>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-gray-200 text-center">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="text-red-500 hover:text-red-700 transition duration-150 text-sm font-medium">
+                    Log Out
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Fallback for unauthenticated users -->
+    <div class="p-4 bg-red-100 text-red-700 rounded-lg text-center" sec:authorize="!isAuthenticated()">
+        <p class="font-semibold">Access Denied</p>
+        <p>You must be authenticated to view this page. Please <a th:href="@{/login}" class="underline">log in</a>.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>My Support Tickets</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 20px; background-color: #f8fafc; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
+        h1 { color: #1e3a8a; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; display: inline-block; margin: 0; }
+
+        /* Updated header to manage three elements (Home, Title, Actions) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* NEW: Container for action buttons on the right */
+        .header-right {
+            display: flex;
+            gap: 12px; /* Spacing between the action buttons */
+            align-items: center;
+        }
+
+        /* NEW: Style for the Home Button */
+        .home-btn {
+            background-color: #64748b; /* Slate Gray */
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .home-btn:hover {
+            background-color: #475569;
+        }
+
+        /* NEW: Style for the All Tickets Button (Staff/Mechanic) */
+        .all-tickets-btn {
+            background-color: #059669; /* Emerald Green */
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .all-tickets-btn:hover {
+            background-color: #047857;
+        }
+
+        .create-btn { background-color: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background-color 0.3s; }
+        .create-btn:hover { background-color: #2563eb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #eff6ff; color: #1e3a8a; }
+        .status-open { color: #f97316; font-weight: bold; }
+        .status-closed { color: #10b981; font-weight: bold; }
+        .status-in_progress { color: #3b82f6; font-weight: bold; }
+        .empty-message { text-align: center; color: #64748b; padding: 40px; border: 1px dashed #e2e8f0; border-radius: 8px; margin-top: 20px; }
+        .message { padding: 10px; border-radius: 6px; margin-bottom: 15px; font-weight: 500; }
+        .success { background-color: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .error { background-color: #fee2e2; color: #ef4444; border: 1px solid #ef4444; }
+
+        /* Style for the Delete Button */
+        .delete-btn {
+            background-color: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .delete-btn:hover {
+            background-color: #dc2626;
+        }
+
+        /* Style for clickable rows */
+        .clickable-row {
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+        .clickable-row:hover {
+            background-color: #f1f5f9; /* Light hover effect */
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <!-- New Group for Home Button and Title -->
+        <div class="header-left">
+            <!-- Home Button -->
+            <a th:href="@{/}" class="home-btn">
+                Home
+            </a>
+            <h1>My Tickets (User ID: <span th:text="${currentUserId}"></span>)</h1>
+        </div>
+
+        <!-- Action Buttons (All Tickets and Create) -->
+        <div class="header-right">
+            <!-- NEW: All Tickets Button - Visible only to Staff and Mechanic -->
+            <a th:href="@{/tickets/all}" class="all-tickets-btn"
+               th:if="${role == 'STAFF' or role == 'MECHANIC'}">
+                All Tickets
+            </a>
+
+            <!-- Create Ticket Button -->
+            <a th:href="@{/tickets/create}" class="create-btn">
+                + Create New Ticket
+            </a>
+        </div>
+    </div>
+
+    <!-- Display Flash Messages -->
+    <div th:if="${successMessage}" class="message success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}"></div>
+
+    <!-- FIX 1: Use #lists.isEmpty(tickets) for null-safe check -->
+    <div th:if="${#lists.isEmpty(tickets)}" class="empty-message">
+        You haven't submitted any tickets yet. Click the button above to create one.
+    </div>
+
+    <!-- FIX 2: Use #lists.isEmpty(tickets) for null-safe check -->
+    <table th:unless="${#lists.isEmpty(tickets)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Room(s)</th>
+            <th>Status</th>
+            <th>Created On</th>
+            <!-- NEW: Action column header -->
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ticket : ${tickets}"
+            th:data-id="${ticket.id}"
+            class="clickable-row">
+
+            <td th:text="${ticket.id}">101</td>
+            <td th:text="${ticket.title}">Leaky Faucet in Room</td>
+
+            <!-- FIX: Use the pre-calculated roomNumbersString property from the DTO -->
+            <td th:text="${ticket.roomNumbersString}">123</td>
+
+            <td>
+                <span th:text="${ticket.status}"
+                      th:classappend="${ticket.status.name() == 'OPEN'} ? 'status-open' : (${ticket.status.name() == 'CLOSED'} ? 'status-closed' : 'status-in_progress')">OPEN</span>
+            </td>
+            <td th:text="${#dates.format(ticket.creationDate, 'yyyy-MM-dd HH:mm')}">2025-10-07</td>
+
+            <!-- NEW: Action column with Delete button/form -->
+            <td onclick="event.stopPropagation()">
+                <!--
+                    The onclick="event.stopPropagation()" on the TD prevents the row click
+                    handler from firing when the user clicks the Delete column.
+                -->
+                <form th:action="@{/tickets/{id}(id=${ticket.id})}" method="post"
+                      onsubmit="return confirm('Are you sure you want to delete ticket ' + [[${ticket.id}]] + ' - ' + [[${ticket.title}]] + '?');">
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const rows = document.querySelectorAll('.clickable-row');
+
+        rows.forEach(row => {
+            row.addEventListener('click', (event) => {
+                const ticketId = row.getAttribute('data-id');
+                if (ticketId) {
+                    // Navigate to the detail view for this ticket.
+                    // This assumes your Spring Web Controller has a mapping like @GetMapping("/tickets/details/{id}")
+                    window.location.href = '/tickets/details/' + ticketId;
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

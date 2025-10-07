@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Ticket</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 20px; background-color: #f8fafc; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h1 { color: #1e3a8a; margin-bottom: 25px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; }
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, textarea:focus, select:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
+        .error-message { color: #ef4444; font-size: 0.9em; margin-top: 5px; }
+        .btn-submit { background-color: #10b981; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; width: 100%; }
+        .btn-submit:hover { background-color: #059669; }
+        .btn-back { display: block; text-align: center; margin-top: 15px; color: #3b82f6; text-decoration: none; font-size: 0.9em; }
+
+        /* Custom styles for Room Selector Buttons */
+        .room-btn-group { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #f8fafc; }
+        .room-btn {
+            padding: 8px 15px;
+            border: 1px solid #94a3b8;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #f1f5f9;
+            color: #334155;
+            transition: background-color 0.15s, border-color 0.15s, transform 0.1s;
+            line-height: 1;
+        }
+        .room-btn:hover {
+            background-color: #e2e8f0;
+        }
+        .room-btn.selected {
+            background-color: #3b82f6; /* Blue for selected state */
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.4);
+            font-weight: 600;
+        }
+        .room-btn.selected:hover {
+             background-color: #2563eb;
+        }
+    </style>
+
+    <!-- ✅ FIXED: Safe Thymeleaf expression for room list -->
+    <div id="room-data-transfer"
+         th:attr="data-rooms=${roomNumbersJson}"
+         style="display:none;">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Retrieve the JSON string from the hidden element
+            const roomDataElement = document.getElementById('room-data-transfer');
+            const roomDataString = roomDataElement.dataset.rooms;
+
+            // 2. Parse the string to get the final, clean JavaScript array
+            const AVAILABLE_ROOM_NUMBERS = JSON.parse(roomDataString || '[]');
+
+            const container = document.getElementById('room-selector-container');
+            const hiddenInput = document.getElementById('roomNumbersHidden');
+
+            // 3. Determine initial selection (from model upon reload)
+            const initialSelectedValue = hiddenInput.value || '';
+            const initialSelectedRooms = initialSelectedValue.split(',').map(r => r.trim()).filter(r => r.length > 0);
+
+            // 4. Render all room buttons
+            AVAILABLE_ROOM_NUMBERS.forEach(room => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.textContent = room;
+                button.classList.add('room-btn');
+                button.setAttribute('data-room', room);
+
+                // Initialize selection state based on model
+                if (initialSelectedRooms.includes(room)) {
+                    button.classList.add('selected');
+                }
+
+                button.addEventListener('click', () => {
+                    button.classList.toggle('selected');
+                    updateHiddenRoomInput();
+                });
+                container.appendChild(button);
+            });
+
+            // 5. Function to update the hidden input value
+            function updateHiddenRoomInput() {
+                const selectedButtons = container.querySelectorAll('.room-btn.selected');
+                const selectedRooms = Array.from(selectedButtons).map(btn => btn.getAttribute('data-room'));
+
+                // Update the hidden field with a comma-separated string
+                hiddenInput.value = selectedRooms.join(',');
+
+                // Manually trigger change for validation to recognize input
+                hiddenInput.dispatchEvent(new Event('change'));
+            }
+
+            // Ensure hidden input is updated on load if buttons were pre-selected by Thymeleaf
+            updateHiddenRoomInput();
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h1>Submit a New Maintenance Ticket</h1>
+
+    <!-- Form action maps to POST /tickets/create -->
+    <form th:action="@{/tickets/create}" th:object="${ticketRequest}" method="post">
+
+        <!-- TITLE -->
+        <div class="form-group">
+            <label for="title">Title (Brief Summary):</label>
+            <input type="text" id="title" th:field="*{title}" required placeholder="e.g., Leaky faucet or Broken AC unit">
+            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error-message"></p>
+        </div>
+
+        <!-- ROOM NUMBERS (Button Selectors) -->
+        <div class="form-group">
+            <label for="roomNumbersHidden">Room Number(s) - Select one or more:</label>
+            <div id="room-selector-container" class="room-btn-group">
+                <!-- Room buttons are dynamically inserted here by JavaScript -->
+            </div>
+
+            <!-- Hidden input that binds to the DTO property `List<String> roomNumbers`. -->
+            <input type="hidden" id="roomNumbersHidden" th:field="*{roomNumbers}">
+            <p th:if="${#fields.hasErrors('roomNumbers')}" th:errors="*{roomNumbers}" class="error-message"></p>
+        </div>
+
+        <!-- CATEGORY (Dropdown - STATIC) -->
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select id="category" th:field="*{category}" required>
+                <option value="">-- Select Category --</option>
+                <option value="MAINTENANCE" th:selected="*{category} == 'MAINTENANCE'">MAINTENANCE</option>
+                <option value="CLEANING" th:selected="*{category} == 'CLEANING'">CLEANING</option>
+                <option value="INTERNET" th:selected="*{category} == 'INTERNET'">INTERNET</option>
+                <option value="SECURITY" th:selected="*{category} == 'SECURITY'">SECURITY</option>
+                <option value="NOISE" th:selected="*{category} == 'NOISE'">NOISE</option>
+                <option value="OTHER" th:selected="*{category} == 'OTHER'">OTHER</option>
+            </select>
+            <p th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="error-message"></p>
+        </div>
+
+        <!-- PRIORITY (Dropdown - STATIC) -->
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select id="priority" th:field="*{priority}" required>
+                <option value="">-- Select Priority --</option>
+                <option value="LOW" th:selected="*{priority} == 'LOW'">LOW</option>
+                <option value="MEDIUM" th:selected="*{priority} == 'MEDIUM'">MEDIUM</option>
+                <option value="HIGH" th:selected="*{priority} == 'HIGH'">HIGH</option>
+            </select>
+            <p th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}" class="error-message"></p>
+        </div>
+
+
+        <!-- IMAGE URL -->
+        <div class="form-group">
+            <label for="imageUrl">Image URL (Optional):</label>
+            <input type="text" id="imageUrl" th:field="*{imageUrl}" placeholder="http://example.com/photo.jpg">
+            <p th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}" class="error-message"></p>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+            <label for="description">Detailed Description:</label>
+            <textarea id="description" th:field="*{description}" rows="6" required
+                      placeholder="Describe the issue in detail, including location and when it started."></textarea>
+            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message"></p>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Ticket</button>
+        <a th:href="@{/tickets/}" class="btn-back">Cancel and Go Back to List</a>
+    </form>
+</div>
+</body>
+</html>
