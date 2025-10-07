@@ -1,5 +1,6 @@
 package com.codelogium.ticketing.dto;
 
+import com.codelogium.ticketing.entity.User;
 import com.codelogium.ticketing.entity.enums.UserRole;
 import java.util.List;
 import com.codelogium.ticketing.dto.*;
@@ -10,6 +11,7 @@ public class UserDTO {
     private Long id;
     private String username;
     private String email;
+    private String password;
     private UserRole role;
 
     // Replaced JPA entity 'Ticket' with the simplified 'TicketDto'
@@ -38,8 +40,19 @@ public class UserDTO {
         this.memberships = memberships;
     }
 
-    // --- GETTERS AND SETTERS ---
-    // (Ensure you include all getters and setters for fields)
+
+    public User toEntity() {
+        User user = new User();
+        user.setUsername(this.username);
+        user.setPassword(this.password);
+        user.setEmail(this.email);
+
+        // Ensure a default role if not provided in the form (e.g., RENTER)
+        user.setRole(UserRole.RENTER);
+
+
+        return user;
+    }
 
     public Long getId() {
         return id;
@@ -95,5 +108,13 @@ public class UserDTO {
 
     public void setMemberships(List<UserRoomDTO> memberships) {
         this.memberships = memberships;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

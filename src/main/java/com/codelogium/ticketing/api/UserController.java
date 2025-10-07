@@ -1,8 +1,8 @@
-package com.codelogium.ticketing.web;
+package com.codelogium.ticketing.api;
 
 import com.codelogium.ticketing.dto.UserDTO;
 import com.codelogium.ticketing.dto.UserRegistrationRequest;
-import com.codelogium.ticketing.mapper.UserMapper; // <-- 1. Import the Mapper
+import com.codelogium.ticketing.mapper.UserMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +29,7 @@ import lombok.AllArgsConstructor;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper; // <-- 2. Inject the Mapper
-
+    private final UserMapper userMapper;
 
     public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
@@ -53,21 +52,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully with ID: " + registeredUser.getId());
     }
 
-    // --- FIX APPLIED HERE ---
     @ApiResponses(value = {
-            // 3. Update the schema to reference UserDTO
             @ApiResponse(responseCode = "200", description = "User successfully retrieved", content = @Content(schema = @Schema(implementation = UserDTO.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(ref = "#/components/responses/401")
     })
     @Operation(summary = "Get User", description = "Retrieves a user by ID")
-    @GetMapping("/{userId}") // <-- 4. Add the missing @GetMapping annotation
+    @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> retrieveUser(@PathVariable Long userId) {
 
-        // 5. Retrieve the JPA Entity
         User userEntity = userService.retrieveUser(userId);
-
-        // 6. Convert the Entity to the DTO using the injected mapper
         UserDTO userDto = userMapper.toDTO(userEntity);
 
         return ResponseEntity.ok(userDto);

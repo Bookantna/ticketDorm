@@ -12,7 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="ticketing" options="-parameters" />
+      <module name="ticketing" options="-parameters --add-exports java.management/com.sun.jmx.remote.util=ALL-UNNAMED" />
     </option>
   </component>
 </project>

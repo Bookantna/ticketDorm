@@ -1,4 +1,4 @@
-package com.codelogium.ticketing.web;
+package com.codelogium.ticketing.api;
 
 import java.util.List;
 

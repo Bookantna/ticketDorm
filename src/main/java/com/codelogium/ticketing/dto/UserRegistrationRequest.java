@@ -29,6 +29,9 @@ public class UserRegistrationRequest {
         this.inviteCode = inviteCode;
     }
 
+    public UserRegistrationRequest() {
+    }
+
     public User getUser() {
         return user;
     }
