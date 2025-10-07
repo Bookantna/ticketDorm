@@ -15,6 +15,7 @@ public interface TicketService {
     Ticket updateTicketStatus(Long ticketId, Long userId, TicketStatusUpdateDTO dto);
     Ticket retrieveTicket(Long ticketId, Long userId);
     List<Ticket> retrieveALLTicket();
+    List<Ticket> retrieveTicketInProgress();
     void removeTicket(Long ticketId, Long userid);
     List<Ticket> retrieveTicketsByCreator(Long userId);
 

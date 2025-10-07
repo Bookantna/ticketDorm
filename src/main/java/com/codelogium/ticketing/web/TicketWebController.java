@@ -445,4 +445,21 @@ public class TicketWebController {
 
         return "ticketALL"; // Display the tickets.html template
     }
+    @GetMapping("/unsolve") // Updated mapping to use the base path /tickets/
+    public String showTicketsInProgressList(Model model, Authentication authentication, HttpServletRequest request) {
+
+
+
+        // Pass an empty DTO to bind the form inputs to
+        // Pass the user ID for hidden form fields or security checks
+
+        List<TicketDTO> tickets = ticketService.retrieveTicketInProgress()
+                .stream()
+                .map(ticketMapper::toDto)
+                .toList();
+
+        model.addAttribute("tickets", tickets);
+
+        return "ticketInProgress"; // Display the tickets.html template
+    }
 }

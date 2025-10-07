@@ -111,8 +111,13 @@
         <div class="header-right">
             <!-- NEW: All Tickets Button - Visible only to Staff and Mechanic -->
             <a th:href="@{/tickets/all}" class="all-tickets-btn"
-               th:if="${role == 'STAFF' or role == 'MECHANIC'}">
+               th:if="${role == 'STAFF'}">
                 All Tickets
+            </a>
+
+            <a th:href="@{/tickets/unsolve}" class="all-tickets-btn"
+               th:if="${role == 'STAFF' or role == 'MECHANIC'}">
+                To fix
             </a>
 
             <!-- Create Ticket Button -->

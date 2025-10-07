@@ -79,7 +79,7 @@
         <!-- Mark as Solved Button - Visible only to STAFF -->
         <a th:href="@{'/tickets/solve/' + ${ticket.id}}"
            class="back-btn"
-           th:if="${role == 'STAFF'}"
+           th:if="${role == 'STAFF' or role == 'Mechanic'}"
            style="background-color: #10b981; margin-left: 10px;">
             ✅ Mark as Solved
         </a>

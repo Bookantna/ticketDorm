@@ -54,11 +54,6 @@
                 <span class="font-medium text-sm rounded-full bg-primary-green px-2 py-0.5 text-white"
                       th:text="${role ?: '[Role Placeholder]'}"></span>
             </p>
-
-            <!-- JWT Token display -->
-            <p class="text-gray-700 mt-3 font-semibold">JWT Token:</p>
-            <p class="break-all bg-gray-100 p-2 rounded-lg text-sm"
-               th:text="${jwtToken ?: 'No token found'}">[JWT_TOKEN]</p>
         </div>
 
         <div class="text-center pt-4">
@@ -75,12 +70,6 @@
                 </button>
             </form>
         </div>
-    </div>
-
-    <!-- Fallback for unauthenticated users -->
-    <div class="p-4 bg-red-100 text-red-700 rounded-lg text-center" sec:authorize="!isAuthenticated()">
-        <p class="font-semibold">Access Denied</p>
-        <p>You must be authenticated to view this page. Please <a th:href="@{/login}" class="underline">log in</a>.</p>
     </div>
 
 </div>
