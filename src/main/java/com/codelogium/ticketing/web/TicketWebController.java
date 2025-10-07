@@ -40,9 +40,8 @@ public class TicketWebController {
      * @param authentication Spring Security Authentication object
      * @return The name of the Thymeleaf template (tickets.html)
      */
-    @GetMapping("/") // Updated mapping to use the base path /tickets/
+    @GetMapping("/list") // Updated mapping to use the base path /tickets/
     public String showTicketsList(Model model, Authentication authentication, HttpServletRequest request) {
-        // ASSUMPTION: The authenticated user's name is their ID, which is a Long.
 
         String username = "Guest (via Authentication)"; // Fallback to authentication if cookies fail
         String roles = "N/A (via Authentication)";
