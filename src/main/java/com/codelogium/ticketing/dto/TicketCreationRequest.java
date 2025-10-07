@@ -39,6 +39,7 @@ public class TicketCreationRequest {
     // Default constructor is required by Jackson
     public TicketCreationRequest() {}
 
+
     // Parameterized constructor explicitly marked with @JsonCreator for reliable deserialization
     @JsonCreator
     public TicketCreationRequest(

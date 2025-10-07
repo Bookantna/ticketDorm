@@ -170,12 +170,15 @@ public class TicketServiceImp implements TicketService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with ID: " + ticketId));
     }
 
+
     @Override
     public List<Ticket> retrieveTicketsByCreator(Long userId) {
         validateUser(userId);
 
         List<Ticket> tickets = ticketRepository.findByCreatorId(userId);
-        if( tickets == null || tickets.size() == 0) throw new ResourceNotFoundException("No tickets created yet.");
+        if( tickets == null || tickets.size() == 0){
+            System.out.println("No tickets created yet.");
+        }
 
         return tickets;
     }

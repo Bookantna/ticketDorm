@@ -21,6 +21,7 @@ com/codelogium/ticketing/security/SecurityConstants.class
 com/codelogium/ticketing/dto/RoomDTO.class
 com/codelogium/ticketing/service/CommentServiceImp.class
 com/codelogium/ticketing/dto/AuthResponse.class
+com/codelogium/ticketing/service/UserRoomServiceImp.class
 com/codelogium/ticketing/security/manager/CustomAuthenticationManager.class
 com/codelogium/ticketing/entity/enums/UserRole.class
 com/codelogium/ticketing/ApplicationExceptionHandler.class
@@ -41,6 +42,7 @@ com/codelogium/ticketing/service/FileStorageService.class
 com/codelogium/ticketing/repository/RoomDetailsRepository.class
 com/codelogium/ticketing/security/filter/ExceptionHandlerFilter.class
 com/codelogium/ticketing/repository/UserRoomRepository.class
+com/codelogium/ticketing/service/UserRoomService.class
 com/codelogium/ticketing/security/handler/CustomAuthenticationEntryPoint.class
 com/codelogium/ticketing/dto/TicketCreationRequest.class
 com/codelogium/ticketing/repository/AuditLogRepository.class
