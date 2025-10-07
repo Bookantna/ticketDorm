@@ -37,7 +37,7 @@ public class SecurityConfig {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(customAuthenticationManager);
 
         // Explicitly set the filter URL (matches the form action in the HTML)
-        authenticationFilter.setFilterProcessesUrl("/user/authenticate");
+        authenticationFilter.setFilterProcessesUrl("/users/authenticate");
 
         // --- CRUCIAL NOTE FOR FORM LOGIN ERROR ---
         // If your custom AuthenticationFilter is failing to parse the request body,
@@ -70,9 +70,11 @@ public class SecurityConfig {
 
                         // Allow access to the welcome page after login
                         .requestMatchers(HttpMethod.GET, "/welcome").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tickets/list").permitAll()//hasAnyAuthority("RENTER", "STAFF", "MECHANIC")
+                        .requestMatchers(HttpMethod.GET, "/tickets/create").permitAll()//.hasAnyAuthority("RENTER")
 
                         // Path used internally by the AuthenticationFilter
-                        .requestMatchers(HttpMethod.POST, "/user/authenticate").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/authenticate").permitAll()
 
 
                         // --- Error handling and documentation paths ---

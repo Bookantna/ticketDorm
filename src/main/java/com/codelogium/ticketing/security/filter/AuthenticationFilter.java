@@ -125,24 +125,33 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             } else {
                 // Scenario 1: Web Client (Set Cookie and Redirect to Welcome Page)
 
+                // Get username from authentication result
+                String userName = authResult.getName();
+
                 // 1. Store the JWT in a secure, HTTP-only cookie.
-                // Using "JWT_TOKEN" as the key, matching the original implementation.
                 Cookie jwtCookie = new Cookie("JWT_TOKEN", token);
-
-                // The cookie is HTTP-only, preventing client-side JavaScript access (security).
                 jwtCookie.setHttpOnly(true);
-
-                // Available to the entire application path.
                 jwtCookie.setPath("/");
-
-                // Set max age for the cookie (assuming TOKEN_EXPIRATION is in milliseconds)
-                // This ensures the cookie expires when the token does.
                 jwtCookie.setMaxAge((int) (SecurityConstants.TOKEN_EXPIRATION / 1000));
-
-                // Add the cookie to the response
                 response.addCookie(jwtCookie);
 
-                // 2. Redirect the user to the welcome/index page.
+                // 2. Add Username Cookie (Client-readable for UI)
+                Cookie usernameCookie = new Cookie("USER_NAME", userName);
+                usernameCookie.setHttpOnly(false); // Client-side JS access is allowed for UI display
+                usernameCookie.setPath("/");
+                usernameCookie.setMaxAge((int) (SecurityConstants.TOKEN_EXPIRATION / 1000));
+                response.addCookie(usernameCookie);
+
+                // 3. Add Roles Cookie (Client-readable for UI role checks)
+                String rolesString = authorities.stream().collect(Collectors.joining(","));
+                Cookie roleCookie = new Cookie("USER_ROLES", rolesString);
+                roleCookie.setHttpOnly(false); // Client-side JS access is allowed
+                roleCookie.setPath("/");
+                roleCookie.setMaxAge((int) (SecurityConstants.TOKEN_EXPIRATION / 1000));
+                response.addCookie(roleCookie);
+
+
+                // 4. Redirect the user to the welcome/index page.
                 response.sendRedirect("/welcome");
             }
 

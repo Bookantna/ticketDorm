@@ -32,6 +32,7 @@ com/codelogium/ticketing/dto/CommentDTO.class
 com/codelogium/ticketing/service/AuthService.class
 com/codelogium/ticketing/service/UserServiceImp.class
 com/codelogium/ticketing/security/filter/AuthenticationFilter.class
+com/codelogium/ticketing/web/TicketWebController.class
 com/codelogium/ticketing/repository/CommentRepository.class
 com/codelogium/ticketing/entity/User.class
 com/codelogium/ticketing/api/TicketController.class

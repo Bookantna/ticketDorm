@@ -1,5 +1,8 @@
 package com.codelogium.ticketing.web;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +37,46 @@ public class UserWebController {
      * Maps the root, /index, and /welcome paths to the post-login welcome page.
      */
     @GetMapping({"/", "/index", "/welcome"})
-    public String showWelcomePage() {
-        return "welcome";
+    public String showWelcomePage(Model model, Authentication authentication, HttpServletRequest request) {
+
+        // Default values if cookies are not found
+        String username = "Guest (via Authentication)"; // Fallback to authentication if cookies fail
+        String roles = "N/A (via Authentication)";
+        String jwtToken = "No token found";
+
+        // Variables to store cookie values
+        String cookieUsername = null;
+        String cookieRoles = null;
+        String cookieJwtToken = null;
+
+        // Iterate through cookies to find USER_NAME, USER_ROLES, and JWT_TOKEN
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                switch (cookie.getName()) {
+                    case "JWT_TOKEN":
+                        cookieJwtToken = cookie.getValue();
+                        break;
+                    case "USER_NAME":
+                        cookieUsername = cookie.getValue();
+                        break;
+                    case "USER_ROLES":
+                        cookieRoles = cookie.getValue();
+                        break;
+                }
+            }
+        }
+
+        // Assign values to the model: Prioritize cookie values
+        model.addAttribute("username",
+                cookieUsername != null ? cookieUsername : (authentication != null ? authentication.getName() : "Guest"));
+
+        model.addAttribute("role",
+                cookieRoles != null ? cookieRoles : (authentication != null ? authentication.getAuthorities().toString() : "N/A"));
+
+        model.addAttribute("jwtToken",
+                cookieJwtToken != null ? cookieJwtToken : "No token found");
+
+        return "welcome"; // Thymeleaf template name
     }
 
     @GetMapping("/register")

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>My Support Tickets</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 20px; background-color: #f8fafc; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); }
+        h1 { color: #1e3a8a; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; display: inline-block;}
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .create-btn { background-color: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background-color 0.3s; }
+        .create-btn:hover { background-color: #2563eb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #eff6ff; color: #1e3a8a; }
+        .status-open { color: #f97316; font-weight: bold; }
+        .status-closed { color: #10b981; font-weight: bold; }
+        .status-in_progress { color: #3b82f6; font-weight: bold; }
+        .empty-message { text-align: center; color: #64748b; padding: 40px; border: 1px dashed #e2e8f0; border-radius: 8px; margin-top: 20px; }
+        .message { padding: 10px; border-radius: 6px; margin-bottom: 15px; font-weight: 500; }
+        .success { background-color: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .error { background-color: #fee2e2; color: #ef4444; border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>My Tickets (User ID: <span th:text="${currentUserId}"></span>)</h1>
+        <!-- The 'RENTER' authority check should be enforced in SecurityConfig/Controller -->
+        <a th:href="@{/web/tickets/create}" class="create-btn">
+            + Create New Ticket
+        </a>
+    </div>
+
+    <!-- Display Flash Messages -->
+    <div th:if="${successMessage}" class="message success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}"></div>
+
+    <div th:if="${tickets.empty}" class="empty-message">
+        You haven't submitted any tickets yet. Click the button above to create one.
+    </div>
+
+    <table th:unless="${tickets.empty}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Dorm</th>
+            <th>Status</th>
+            <th>Created On</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ticket : ${tickets}">
+            <td th:text="${ticket.id}">101</td>
+            <td th:text="${ticket.title}">Leaky Faucet in Room</td>
+            <td th:text="${ticket.dormNumber}">123</td>
+            <td>
+                        <span th:text="${ticket.status}"
+                              th:classappend="${ticket.status.name() == 'OPEN'} ? 'status-open' : (${ticket.status.name() == 'CLOSED'} ? 'status-closed' : 'status-in_progress')">OPEN</span>
+            </td>
+            <td th:text="${#dates.format(ticket.creationDate, 'yyyy-MM-dd HH:mm')}">2025-10-07</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

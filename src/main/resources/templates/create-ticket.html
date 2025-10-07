@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Ticket</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; margin: 20px; background-color: #f8fafc; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h1 { color: #1e3a8a; margin-bottom: 25px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, textarea:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); }
+        .error-message { color: #ef4444; font-size: 0.9em; margin-top: 5px; }
+        .btn-submit { background-color: #10b981; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; width: 100%; }
+        .btn-submit:hover { background-color: #059669; }
+        .btn-back { display: block; text-align: center; margin-top: 15px; color: #3b82f6; text-decoration: none; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Submit a New Maintenance Ticket</h1>
+
+    <!-- UPDATED: Form action now points to the new /tickets/create path -->
+    <form th:action="@{/tickets/create}" th:object="${ticketRequest}" method="post">
+
+        <!-- Hidden field for userId is not strictly needed here as the Controller uses Authentication,
+             but included for completeness if the DTO requires it -->
+        <!-- <input type="hidden" name="userId" th:value="${currentUserId}" /> -->
+
+        <div class="form-group">
+            <label for="title">Title (Brief Summary):</label>
+            <input type="text" id="title" th:field="*{title}" required placeholder="e.g., Leaky faucet or Broken AC unit">
+            <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error-message"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="dormNumber">Dorm/Room Number:</label>
+            <!-- Assuming dormNumber is a String or can be treated as one for input -->
+            <input type="text" id="dormNumber" th:field="*{dormNumber}" required placeholder="e.g., A-102">
+            <p th:if="${#fields.hasErrors('dormNumber')}" th:errors="*{dormNumber}" class="error-message"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Detailed Description:</label>
+            <textarea id="description" th:field="*{description}" rows="6" required
+                      placeholder="Describe the issue in detail, including location and when it started."></textarea>
+            <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message"></p>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit Ticket</button>
+        <!-- UPDATED: Back link now points to the new /tickets/ path (which maps to the list view) -->
+        <a th:href="@{/tickets/}" class="btn-back">Cancel and Go Back to List</a>
+    </form>
+</div>
+</body>
+</html>
