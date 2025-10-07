@@ -47,7 +47,7 @@ public class UserMapper {
     private RoomDTO toRoomDto(Room room) {
         RoomDTO dto = new RoomDTO();
         dto.setId(room.getId());
-        dto.setName(room.getRoomNumber());
+        dto.setRoomNumber(room.getRoomNumber());
         // Do NOT map room.getMemberships()
         return dto;
     }

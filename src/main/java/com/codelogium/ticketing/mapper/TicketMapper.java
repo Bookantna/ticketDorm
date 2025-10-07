@@ -123,7 +123,7 @@ public class TicketMapper {
         RoomDTO dto = new RoomDTO();
         dto.setId(room.getId());
         // Assuming Room has a name field to display contextually
-        dto.setName(room.getRoomNumber());
+        dto.setRoomNumber(room.getRoomNumber());
 
         // Important: Do NOT map the memberships or ticketAssociations fields!
         return dto;

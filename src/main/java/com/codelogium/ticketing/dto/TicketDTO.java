@@ -1,11 +1,13 @@
 package com.codelogium.ticketing.dto;
 
+import com.codelogium.ticketing.entity.Room;
 import com.codelogium.ticketing.entity.enums.Status;
 import com.codelogium.ticketing.entity.enums.Category;
 import com.codelogium.ticketing.entity.enums.Priority;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TicketDTO {
 
@@ -131,4 +133,17 @@ public class TicketDTO {
     public void setRoomAssociations(List<TicketRoomDTO> roomAssociations) {
         this.roomAssociations = roomAssociations;
     }
+
+    private String roomNumbersString;
+
+    public String getRoomNumbersString() {
+        if (roomAssociations == null || roomAssociations.isEmpty()) return "";
+
+        return roomAssociations.stream()
+                .map(t -> t.getRoom().getRoomNumber())
+                .collect(Collectors.joining(", "));
+    }
+
+
+
 }

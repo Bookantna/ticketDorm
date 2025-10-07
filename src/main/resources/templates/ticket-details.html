@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Ticket #' + ${ticket.id} + ' Details'"></title>
+    <style>
+        /* Base Styles */
+        body { font-family: 'Inter', sans-serif; margin: 20px; background-color: #f8fafc; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h1 { color: #1e3a8a; border-bottom: 2px solid #eff6ff; padding-bottom: 10px; margin-bottom: 20px;}
+
+        /* Detail Elements */
+        .detail-group { margin-bottom: 20px; }
+        .detail-label { font-weight: 600; color: #475569; display: block; margin-bottom: 4px; font-size: 0.9em; text-transform: uppercase; }
+        .detail-value { padding: 12px 15px; background-color: #f1f5f9; border-radius: 8px; font-size: 1.1em; color: #1e293b; white-space: pre-wrap; word-break: break-word; border: 1px solid #e2e8f0; }
+
+        /* Status Colors */
+        .status-open { color: #f97316; font-weight: bold; }
+        .status-closed { color: #10b981; font-weight: bold; }
+        .status-in_progress { color: #3b82f6; font-weight: bold; }
+
+        /* Action Button */
+        .back-btn { background-color: #64748b; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background-color 0.3s; margin-top: 20px; display: inline-block;}
+        .back-btn:hover { background-color: #475569; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="'Ticket Details: #' + ${ticket.id} + ' - ' + ${ticket.title}">Ticket Details: #101 - Leaky Faucet</h1>
+
+    <div class="detail-group">
+        <span class="detail-label">Title:</span>
+        <div class="detail-value" th:text="${ticket.title}">Leaky Faucet in Room 123</div>
+    </div>
+
+    <div class="detail-group">
+        <span class="detail-label">Description:</span>
+        <div class="detail-value" th:text="${ticket.description}">The faucet has been dripping constantly for two days now, wasting water and making noise. Please fix as soon as possible.</div>
+    </div>
+
+    <div class="detail-group">
+        <span class="detail-label">Category:</span>
+        <div class="detail-value" th:text="${ticket.category}">PLUMBING</div>
+    </div>
+
+    <div class="detail-group">
+        <span class="detail-label">Priority:</span>
+        <div class="detail-value" th:text="${ticket.priority}">MEDIUM</div>
+    </div>
+
+    <div class="detail-group">
+        <span class="detail-label">Room(s) Affected:</span>
+        <div class="detail-value" th:text="${ticket.roomNumbersString}">123, 124</div>
+    </div>
+
+    <div class="detail-group">
+        <span class="detail-label">Status:</span>
+        <div class="detail-value">
+            <span th:text="${ticket.status}"
+                  th:classappend="${ticket.status.name() == 'OPEN'} ? 'status-open' : (${ticket.status.name() == 'CLOSED'} ? 'status-closed' : 'status-in_progress')">OPEN</span>
+        </div>
+    </div>
+
+    <div class="detail-group">
+        <span class="detail-label">Created On:</span>
+        <div class="detail-value" th:text="${#dates.format(ticket.creationDate, 'yyyy-MM-dd HH:mm')}">2025-10-07 10:00</div>
+    </div>
+
+
+    <a th:href="@{/tickets/list}" class="back-btn">← Back to Ticket List</a>
+    <div class="detail-group" style="margin-top: 20px;">
+        <!-- Acknowledge Button - Visible only to STAFF -->
+        <a th:href="@{'/tickets/acknowledge/' + ${ticket.id}}"
+           class="back-btn"
+           th:if="${role == 'STAFF'}">
+            ✔ Acknowledge
+        </a>
+
+        <!-- Mark as Solved Button - Visible only to STAFF -->
+        <a th:href="@{'/tickets/solve/' + ${ticket.id}}"
+           class="back-btn"
+           th:if="${role == 'STAFF'}"
+           style="background-color: #10b981; margin-left: 10px;">
+            ✅ Mark as Solved
+        </a>
+    </div>
+</div>
+</body>
+</html>

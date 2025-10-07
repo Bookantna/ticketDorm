@@ -230,4 +230,11 @@ public class TicketServiceImp implements TicketService {
     public static Ticket unwrapTicket(Long ticketId, Optional<Ticket> optionalTicket) {
         return optionalTicket.orElseThrow(() -> new ResourceNotFoundException(ticketId, Ticket.class));
     }
+
+    void acknowledgeTicket(Long ticketId){
+
+    }
+    void solveTicket(Long ticketId){
+
+    }
 }

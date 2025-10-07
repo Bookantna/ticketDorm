@@ -19,5 +19,7 @@ public interface TicketService {
 
     Ticket searchTicket(Long ticketId, Long userId, Status status);
     List<AuditLog> retrieveAuditLogs(Long ticketId, Long userId);
-    
+
+    void acknowledgeTicket(Long ticketId, Long userId);
+    void solveTicket(Long ticketId);
 }

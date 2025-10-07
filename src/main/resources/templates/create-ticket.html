@@ -164,17 +164,6 @@
             <p th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}" class="error-message"></p>
         </div>
 
-        <!-- STATUS (Dropdown - STATIC) -->
-        <div class="form-group">
-            <label for="status">Status (Initial):</label>
-            <select id="status" th:field="*{status}" required>
-                <option value="">-- Select Initial Status --</option>
-                <option value="NEW" th:selected="*{status} == 'NEW'">NEW</option>
-                <option value="IN_PROGRESS" th:selected="*{status} == 'IN_PROGRESS'">IN_PROGRESS</option>
-                <option value="RESOLVED" th:selected="*{status} == 'RESOLVED'">RESOLVED</option>
-            </select>
-            <p th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="error-message"></p>
-        </div>
 
         <!-- IMAGE URL -->
         <div class="form-group">

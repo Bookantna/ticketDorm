@@ -2,7 +2,12 @@ package com.codelogium.ticketing.web;
 
 import com.codelogium.ticketing.dto.TicketCreationRequest;
 import com.codelogium.ticketing.dto.TicketDTO;
+import com.codelogium.ticketing.dto.TicketRoomDTO;
 import com.codelogium.ticketing.entity.Room;
+import com.codelogium.ticketing.entity.Ticket;
+import com.codelogium.ticketing.entity.TicketRoom;
+import com.codelogium.ticketing.entity.enums.Status;
+import com.codelogium.ticketing.exception.ResourceNotFoundException;
 import com.codelogium.ticketing.mapper.TicketMapper;
 import com.codelogium.ticketing.service.TicketService;
 import com.codelogium.ticketing.service.UserRoomService;
@@ -20,6 +25,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Controller to handle web requests for ticket management (displaying views).
@@ -90,13 +98,21 @@ public class TicketWebController {
         }
 
         Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
+
+
+
+        // Pass an empty DTO to bind the form inputs to
+        model.addAttribute("ticketRequest", new TicketCreationRequest());
+        // Pass the user ID for hidden form fields or security checks
+
         List<TicketDTO> tickets = ticketService.retrieveTicketsByCreator(userId)
                 .stream()
                 .map(ticketMapper::toDto)
                 .toList();
 
-        model.addAttribute("tickets", tickets);
-        model.addAttribute("currentUserId", userService.retrieveUser(cookieUsername).getId());
+
+       model.addAttribute("tickets", tickets);
+       model.addAttribute("currentUserId", userService.retrieveUser(cookieUsername).getId());
 
         return "tickets"; // Display the tickets.html template
     }
@@ -181,14 +197,41 @@ public class TicketWebController {
      * @return Redirects to the ticket list page
      */
     @PostMapping("/create")
-    public String createTicket(@Valid @ModelAttribute("ticketRequest") TicketCreationRequest request,
+    public String createTicket(@ModelAttribute("ticketRequest") TicketCreationRequest formRequest,
                                Authentication authentication,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        Long userId = Long.valueOf(authentication.getName());
+        String username = "Guest (via Authentication)"; // Fallback to authentication if cookies fail
+        String roles = "N/A (via Authentication)";
+        String jwtToken = "No token found";
+
+        // Variables to store cookie values
+        String cookieUsername = null;
+        String cookieRoles = null;
+        String cookieJwtToken = null;
+
+        // Iterate through cookies to find USER_NAME, USER_ROLES, and JWT_TOKEN
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                switch (cookie.getName()) {
+                    case "JWT_TOKEN":
+                        cookieJwtToken = cookie.getValue();
+                        break;
+                    case "USER_NAME":
+                        cookieUsername = cookie.getValue();
+                        break;
+                    case "USER_ROLES":
+                        cookieRoles = cookie.getValue();
+                        break;
+                }
+            }
+        }
+
+        Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
 
         try {
-            ticketService.createTicket(userId, request);
+            formRequest.setStatus(Status.NEW);
+            ticketService.createTicket(userId, formRequest);
             redirectAttributes.addFlashAttribute("successMessage", "Ticket created successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to create ticket: " + e.getMessage());
@@ -197,6 +240,105 @@ public class TicketWebController {
         }
 
         // UPDATED: Redirect to the correct path for the list view
-        return "redirect:/tickets/";
+        return "redirect:/tickets/list";
     }
+
+    // Example method you need in your TicketWebController
+
+    @PostMapping("/{id}")
+    public String deleteTicket(@PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+
+        String username = "Guest (via Authentication)"; // Fallback to authentication if cookies fail
+        String roles = "N/A (via Authentication)";
+        String jwtToken = "No token found";
+
+        // Variables to store cookie values
+        String cookieUsername = null;
+        String cookieRoles = null;
+        String cookieJwtToken = null;
+
+        // Iterate through cookies to find USER_NAME, USER_ROLES, and JWT_TOKEN
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                switch (cookie.getName()) {
+                    case "JWT_TOKEN":
+                        cookieJwtToken = cookie.getValue();
+                        break;
+                    case "USER_NAME":
+                        cookieUsername = cookie.getValue();
+                        break;
+                    case "USER_ROLES":
+                        cookieRoles = cookie.getValue();
+                        break;
+                }
+            }
+        }
+
+
+        Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
+
+        try {
+            ticketService.removeTicket(id,userId);
+            redirectAttributes.addFlashAttribute("successMessage", "Ticket " + id + " deleted successfully.");
+        } catch (ResourceNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Ticket not found or unauthorized to delete.");
+        }
+        return "redirect:/tickets/list";
+    }
+    @GetMapping("/details/{id}")
+    public String showTicketDetails(@PathVariable Long id, Model model, Authentication authentication, HttpServletRequest request) {
+        String username = "Guest (via Authentication)"; // Fallback to authentication if cookies fail
+        String roles = "N/A (via Authentication)";
+        String jwtToken = "No token found";
+
+        // Variables to store cookie values
+        String cookieUsername = null;
+        String cookieRoles = null;
+        String cookieJwtToken = null;
+
+        // Iterate through cookies to find USER_NAME, USER_ROLES, and JWT_TOKEN
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                switch (cookie.getName()) {
+                    case "JWT_TOKEN":
+                        cookieJwtToken = cookie.getValue();
+                        break;
+                    case "USER_NAME":
+                        cookieUsername = cookie.getValue();
+                        break;
+                    case "USER_ROLES":
+                        cookieRoles = cookie.getValue();
+                        break;
+                }
+            }
+        }
+
+        if (cookieUsername == null) {
+            model.addAttribute("errorMessage", "User session expired or not found.");
+            return "redirect:/tickets/list";
+        }
+
+        try {
+            Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
+
+            // Retrieve the ticket and map to DTO
+            TicketDTO ticket = ticketMapper.toDto(ticketService.retrieveTicket(userId, id));
+
+            model.addAttribute("ticket", ticket);
+            model.addAttribute("role", cookieRoles);
+            model.addAttribute("currentUserId", userId);
+
+        } catch (ResourceNotFoundException e) {
+            model.addAttribute("errorMessage", "Ticket not found: " + e.getMessage());
+            return "tickets"; // Show the list view with an error message
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "An error occurred while viewing ticket details: " + e.getMessage());
+            return "tickets";
+        }
+
+        return "ticket-details"; // Display the new detail template
+    }
+
+
+
 }

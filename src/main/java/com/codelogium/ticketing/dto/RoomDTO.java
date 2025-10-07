@@ -2,13 +2,14 @@ package com.codelogium.ticketing.dto;
 
 public class RoomDTO {
     private Long id;
-    private String name;
+    private String roomNumber;
 
     // Standard constructor, getters, and setters
 
-    public RoomDTO(Long id, String name) {
+
+    public RoomDTO(Long id, String roomNumber) {
         this.id = id;
-        this.name = name;
+        this.roomNumber = roomNumber;
     }
 
     public RoomDTO() {
@@ -22,11 +23,11 @@ public class RoomDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getRoomNumber() {
+        return roomNumber;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
     }
 }
