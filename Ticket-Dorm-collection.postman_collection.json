@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"user\": {\r\n    \"username\": \"jrenter\", // 7 characters, fixed\r\n    \"password\": \"mySecurePassword123\",\r\n    \"email\": \"john@example.com\",\r\n    \"role\": \"RENTER\"\r\n  },\r\n  \"inviteCode\": \"16DC368A\" \r\n}",
+							"raw": "{\r\n  \"user\": {\r\n    \"username\": \"useruser\", // 7 characters, fixed\r\n    \"password\": \"useruser\",\r\n    \"email\": \"useruser@example.com\",\r\n    \"role\": \"STAFF\"\r\n  },\r\n  \"inviteCode\": \"16DC368A\" \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,7 +24,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/users",
+							"raw": "http://localhost:8080/api/users/register",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -32,7 +32,8 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"users"
+								"users",
+								"register"
 							]
 						}
 					},
@@ -45,7 +46,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\":\"tupac\",\r\n    \"password\":\"tupac123'\r\n}",
+							"raw": "{\r\n    \"username\":\"useruser\",\r\n    \"password\":\"useruser\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,14 +54,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/user/authenticate",
+							"raw": "http://localhost:8080/users/authenticate",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"user",
+								"users",
 								"authenticate"
 							]
 						}
@@ -75,7 +76,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dXBhYyIsImV4cCI6MTc0MTczOTEyMH0.aQpg5xLZ6W_Xh8TnSPdUH-tUtmHfejjk3xcHnsyVkg_1LdAKShsXQ0CMrqLQefgTrmRyFExYFDPz6OgtYTkJ0A",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VydXNlciIsImV4cCI6MTc1OTc2OTg3MSwiYXV0aG9yaXRpZXMiOlsiUkVOVEVSIl19.YeZCLxCnTJOa70ANP0Nw1kHFQUmoxlUXzRqnbT6mfkQPpyRl0utb7ozq-kFP7cuZUix6IujL2Wnr9FTI7Xq2FQ",
 									"type": "string"
 								}
 							]
@@ -83,13 +84,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/1",
+							"raw": "http://localhost:8080/api/users/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
 								"users",
 								"1"
 							]
@@ -135,7 +137,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dXBhYyIsImV4cCI6MTc0MTczOTEyMH0.aQpg5xLZ6W_Xh8TnSPdUH-tUtmHfejjk3xcHnsyVkg_1LdAKShsXQ0CMrqLQefgTrmRyFExYFDPz6OgtYTkJ0A",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VydXNlciIsImV4cCI6MTc1OTc2OTY2MywiYXV0aG9yaXRpZXMiOlsiUkVOVEVSIl19.ubeV58jCEHYsx0oSspngH41SJt_CsFYlVKPl6qqAaazFNOW69lFO_BuNOLGLGt1so7Kd_bS-JMY9pLBbmX2A4g",
 									"type": "string"
 								}
 							]
@@ -172,7 +174,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dXBhYyIsImV4cCI6MTc0MzAzNjI5NywiYXV0aG9yaXRpZXMiOlsiRU1QTE9ZRUUiXX0.f8-psgF5HEFd-xIIjJ3FblglFGD2v6wiTrMO3dTeFT7euagU4YCTS1BPimqvASv3XVd-uxWOSXv_JACpDpvCvA",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VydXNlciIsImV4cCI6MTc1OTc5NzI1NCwiYXV0aG9yaXRpZXMiOlsiUkVOVEVSIl19.9W8VfbpfYEPx3eHcv1xOublelE7BKaS47-UgpE5tAqRtor8Rzes7Dtqpxl9K2cfaVxLAh8HNy-KPlmlSvHixlw",
 									"type": "string"
 								}
 							]
@@ -181,7 +183,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\":\"Discrepancy creating org account\",\r\n    \"description\":\"I have issues creating the organization account\",\r\n    \"category\":\"NETWORK\",\r\n    \"priority\":\"LOW\",\r\n    \"status\":\"NEW\"\r\n\r\n}",
+							"raw": "{\r\n    \"title\": \"Discrepancy creating org account\",\r\n    \"description\": \"I have issues creating the organization account. The system throws a 500 error after submitting the form.\",\r\n    \"category\": \"INTERNET\",\r\n    \"priority\": \"LOW\",\r\n    \"status\": \"NEW\",\r\n    \"imageUrl\": \"https://ticketing-storage.example.com/attachments/org_account_error_screenshot.png\",\r\n    \r\n    \"roomNumbers\": [\r\n        \"101\"\r\n    ]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -212,7 +214,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dXBhYyIsImV4cCI6MTc0MzAzNjI5NywiYXV0aG9yaXRpZXMiOlsiRU1QTE9ZRUUiXX0.f8-psgF5HEFd-xIIjJ3FblglFGD2v6wiTrMO3dTeFT7euagU4YCTS1BPimqvASv3XVd-uxWOSXv_JACpDpvCvA",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VydXNlciIsImV4cCI6MTc1OTc5NzI1NCwiYXV0aG9yaXRpZXMiOlsiUkVOVEVSIl19.9W8VfbpfYEPx3eHcv1xOublelE7BKaS47-UgpE5tAqRtor8Rzes7Dtqpxl9K2cfaVxLAh8HNy-KPlmlSvHixlw",
 									"type": "string"
 								}
 							]
@@ -437,7 +439,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0dXBhYyIsImV4cCI6MTc0MTc0MTk2MH0.eVHxnFu3r60jXog853uN1Ew_4snBQ0TXzX_yjTEJbk1JQOE3pJ4Vr3jZeAMDUTchMWzjGDSDZc4DMubJxRiDaA",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VydXNlciIsImV4cCI6MTc1OTc3MjYwMywiYXV0aG9yaXRpZXMiOlsiUkVOVEVSIl19.hRioDQHcWpuMupcpslW6P33yXybayzAfirKGYYt1EhzaGZYniY-KeWFQs3MZJXgSHJ0IYQYIHhd3bfB6R-Terw",
 									"type": "string"
 								}
 							]
