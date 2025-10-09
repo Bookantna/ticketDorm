@@ -7,6 +7,9 @@ public interface UserService {
     // Updated method signature
     User createUser(User user, String inviteCode);
 
+    // update Room
+    User updateUser(User user, String inviteCode);
+
     User retrieveUser(Long userId);
 
     User retrieveUser(String username);

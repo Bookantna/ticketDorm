@@ -10,6 +10,7 @@ com/codelogium/ticketing/entity/enums/Priority.class
 com/codelogium/ticketing/service/FileStorageServiceImp.class
 com/codelogium/ticketing/repository/RoomRepository.class
 com/codelogium/ticketing/entity/AuditLog.class
+com/codelogium/ticketing/service/RoomDetailService.class
 com/codelogium/ticketing/mapper/TicketMapper.class
 com/codelogium/ticketing/entity/enums/Category.class
 com/codelogium/ticketing/entity/Room.class
@@ -17,6 +18,7 @@ com/codelogium/ticketing/security/handler/CustomAccessDeniedHandler.class
 com/codelogium/ticketing/config/DataInitializer.class
 com/codelogium/ticketing/service/TicketService.class
 com/codelogium/ticketing/dto/TicketDTO.class
+com/codelogium/ticketing/web/RoomWebController.class
 com/codelogium/ticketing/security/SecurityConstants.class
 com/codelogium/ticketing/dto/RoomDTO.class
 com/codelogium/ticketing/service/CommentServiceImp.class
@@ -66,4 +68,5 @@ com/codelogium/ticketing/dto/UserReferenceDTO.class
 com/codelogium/ticketing/repository/TicketRepository.class
 com/codelogium/ticketing/service/TicketServiceImp.class
 com/codelogium/ticketing/security/SecurityConfig.class
+com/codelogium/ticketing/service/RoomDetailServiceImp.class
 com/codelogium/ticketing/entity/Comment.class

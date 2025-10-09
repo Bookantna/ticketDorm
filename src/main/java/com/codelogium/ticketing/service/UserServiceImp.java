@@ -58,6 +58,23 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional
+    public User updateUser(User user, String inviteCode) {
+
+        // 2. Look up the room using the invite code
+        Room room = roomRepository.findByInviteCode(inviteCode.trim())
+                .orElseThrow(() -> new ResourceNotFoundException(0L, Room.class)); // Throws if code is invalid
+
+
+        UserRoom userRoomMembership = new UserRoom(user, room);
+
+        // 5. Save the membership to link the User and the Room
+        userRoomRepository.save(userRoomMembership);
+
+        return user;
+    }
+
+    @Override
     public User retrieveUser(Long userId) {
         return unwrapUser(userId, userRepository.findById(userId));
     }

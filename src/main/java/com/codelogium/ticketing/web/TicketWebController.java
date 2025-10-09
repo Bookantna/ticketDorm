@@ -99,8 +99,6 @@ public class TicketWebController {
 
         Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
 
-
-
         // Pass an empty DTO to bind the form inputs to
         model.addAttribute("ticketRequest", new TicketCreationRequest());
         // Pass the user ID for hidden form fields or security checks
@@ -111,7 +109,7 @@ public class TicketWebController {
                 .toList();
 
 
-       model.addAttribute("tickets", tickets);
+        model.addAttribute("tickets", tickets);
         model.addAttribute("role", cookieRoles);
         model.addAttribute("currentUserId", userService.retrieveUser(cookieUsername).getId());
 
@@ -323,7 +321,7 @@ public class TicketWebController {
             Long userId = Long.valueOf(userService.retrieveUser(cookieUsername).getId());
 
             // Retrieve the ticket and map to DTO
-            TicketDTO ticket = ticketMapper.toDto(ticketService.retrieveTicket(userId, id));
+            TicketDTO ticket = ticketMapper.toDto(ticketService.retrieveTicket(id, userId));
 
             model.addAttribute("ticket", ticket);
             model.addAttribute("role", cookieRoles);

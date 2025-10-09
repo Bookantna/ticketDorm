@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.management.relation.Role;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -80,27 +81,37 @@ public class DataInitializer {
 
 
 
-        for(int i=1;i<11;i++){
-            Room room = new Room(String.valueOf(100+i));
-            // Save the room first to get the auto-generated ID
+        List<String> roomDescriptions = List.of(
+                "1 Bedroom, 1 Bathroom",
+                "2 Bedrooms, 2 Bathrooms",
+                "1 Bedroom, 2 Bathrooms",
+                "2 Bedrooms, 1 Bathroom",
+                "Studio Room with 1 Bathroom",
+                "3 Bedrooms, 2 Bathrooms",
+                "1 Bedroom, Shared Bathroom",
+                "2 Bedrooms, Shared Bathroom",
+                "Deluxe Suite with 2 Bedrooms and 2 Bathrooms",
+                "Family Suite with 3 Bedrooms and 3 Bathrooms"
+        );
+
+        for (int i = 0; i < 10; i++) {
+            Room room = new Room(String.valueOf(101 + i));
             room = roomRepository.save(room);
 
-            // ----------------------------------------------------------------------
-            // **THE CRITICAL FIX:**
-            // Use a constructor or setters that DO NOT set the ID for RoomDetails.
-            // By NOT passing room.getId() here, Hibernate treats it as a NEW entity.
-            // Assuming this is your new constructor:
-            // RoomDetails(Room room, String floor, String manager, Instant createdTime)
-            // ----------------------------------------------------------------------
+            // Create room details
             RoomDetails roomDetails = new RoomDetails(
                     room,
                     "Floor 1",
-                    "John",
-                    Instant.now().minusSeconds((long)(i * 3600 * 24 * 7))
+                    roomDescriptions.get(i),
+                    Instant.now().minusSeconds((long) ((i + 1) * 3600 * 24 * 7))
             );
 
+            if(i>5){
+                roomDetails.setFloor("Floor 2");
+            }
             roomDetailsRepository.save(roomDetails);
         }
+
 
         System.out.println("Successfully added rooms to the database.");
     }

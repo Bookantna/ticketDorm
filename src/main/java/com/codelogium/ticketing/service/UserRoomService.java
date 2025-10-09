@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface UserRoomService {
     List<Room> retrieveRooms(Long userid);
+    //Room retrieveRoom(Long userid);
 }

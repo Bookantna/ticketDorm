@@ -28,16 +28,15 @@ public class RoomDetails {
     @Column(columnDefinition = "TEXT")
     private String floor;
 
-    // Primary staff member responsible for the room or area.
-    private String responsibleManager;
+    private String desc;
 
     public RoomDetails() {
     }
 
-    public RoomDetails(Room room, String floor, String responsibleManager, Instant lastInspectionDate) {
+    public RoomDetails(Room room, String floor, String desc, Instant lastInspectionDate) {
         this.room = room;
         this.floor = floor;
-        this.responsibleManager = responsibleManager;
+        this.desc = desc;
         this.lastInspectionDate = lastInspectionDate;
     }
 
@@ -67,12 +66,12 @@ public class RoomDetails {
         this.floor = floor;
     }
 
-    public String getResponsibleManager() {
-        return responsibleManager;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setResponsibleManager(String responsibleManager) {
-        this.responsibleManager = responsibleManager;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public Instant getLastInspectionDate() {

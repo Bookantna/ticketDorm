@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Ticketing System</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -24,7 +23,13 @@
         }
     </script>
 </head>
-<body class="bg-secondary-gray min-h-screen flex items-center justify-center p-4">
+<body class="bg-secondary-gray min-h-screen flex items-center justify-center p-4 relative">
+
+<div class="absolute top-4 right-4">
+    <a th:href="@{/room/list}" class="inline-block px-4 py-2 bg-primary-green text-white font-semibold text-sm rounded-lg shadow-md hover:bg-green-700 transition duration-150">
+        Rooms
+    </a>
+</div>
 
 <div class="w-full max-w-lg bg-white p-8 md:p-10 rounded-xl shadow-2xl">
 

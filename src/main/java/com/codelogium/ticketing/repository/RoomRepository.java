@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
-
-
     List<Room> findAllByRoomNumberIn(List<String> roomNumbers);
     Optional<Room> findByInviteCode(String inviteCode);
 }

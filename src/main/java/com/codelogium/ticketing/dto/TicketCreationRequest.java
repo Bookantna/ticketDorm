@@ -81,5 +81,4 @@ public class TicketCreationRequest {
     public List<String> getRoomNumbers() { return roomNumbers; } // Updated method name
     public void setRoomNumbers(List<String> roomNumbers) { this.roomNumbers = roomNumbers; } // Updated method name
 
-    // NOTE: CreationDate and Creator are NOT included here as they are set by the server.
 }

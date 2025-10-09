@@ -35,12 +35,7 @@ public class UserController {
         this.userService = userService;
         this.userMapper = userMapper;
     }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User successfully created"),
-            @ApiResponse(responseCode = "400", description = "Bad Request: Unsuccessful submission")
-    })
-    @Operation(summary = "Create User", description = "Registers a new user")
+    
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody @Valid UserRegistrationRequest request) {
 
