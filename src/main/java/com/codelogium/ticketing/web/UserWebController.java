@@ -24,7 +24,6 @@ import lombok.AllArgsConstructor;
  */
 @Controller
 @RequestMapping("/")
-@AllArgsConstructor
 public class UserWebController {
 
     private final UserService userService;
