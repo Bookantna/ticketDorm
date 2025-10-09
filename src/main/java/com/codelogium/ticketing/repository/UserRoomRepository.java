@@ -15,8 +15,6 @@ import java.util.List;
  */
 @Repository
 public interface UserRoomRepository extends JpaRepository<UserRoom, Long> {
-    // Basic CRUD operations are inherited from JpaRepository
     @Query("SELECT ur.room FROM UserRoom ur WHERE ur.user.id = :userId")
     List<Room> findRoomsByUserId(@Param("userId") Long userId);
-
 }

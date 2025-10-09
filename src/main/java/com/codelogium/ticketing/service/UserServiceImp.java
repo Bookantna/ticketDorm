@@ -14,8 +14,10 @@ import com.codelogium.ticketing.repository.UserRepository;
 import com.codelogium.ticketing.repository.RoomRepository;
 import com.codelogium.ticketing.repository.UserRoomRepository; // Import new repository
 
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImp implements UserService {
 
     private UserRepository userRepository;
@@ -23,6 +25,13 @@ public class UserServiceImp implements UserService {
     private RoomRepository roomRepository;
     private UserRoomRepository userRoomRepository; // NEW DEPENDENCY for M-to-M
 
+    // Manual constructor for explicit dependency injection control
+    public UserServiceImp(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoomRepository roomRepository, UserRoomRepository userRoomRepository) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roomRepository = roomRepository;
+        this.userRoomRepository = userRoomRepository; // Initialize new dependency
+    }
 
     @Override
     @Transactional
