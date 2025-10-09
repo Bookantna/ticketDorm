@@ -236,7 +236,7 @@ public class TicketServiceImp implements TicketService {
         validateUser(userId);
 
         // Get the ticket
-        Ticket ticket = unwrapTicket(ticketId, ticketRepository.findByIdAndCreatorId(ticketId, userId));
+        Ticket ticket = ticketRepository.findTicketbyTicketId(ticketId);
         ticket.setStatus(Status.IN_PROGRESS);
 
         ticketRepository.save(ticket);
@@ -247,7 +247,7 @@ public class TicketServiceImp implements TicketService {
         validateUser(userId);
 
         // Get the ticket
-        Ticket ticket = unwrapTicket(ticketId, ticketRepository.findByIdAndCreatorId(ticketId, userId));
+        Ticket ticket = ticketRepository.findTicketbyTicketId(ticketId);
         ticket.setStatus(Status.RESOLVED);
 
         ticketRepository.save(ticket);

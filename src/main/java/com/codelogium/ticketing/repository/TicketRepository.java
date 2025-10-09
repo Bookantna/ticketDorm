@@ -22,4 +22,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     // Search by Ticket ID and Status
     @Query("SELECT t FROM Ticket t WHERE (t.id = :ticketId) AND (t.status = :status)")
     Optional<Ticket> findByTicketIdAndStatus(@Param("ticketId") Long ticketId, @Param("status") Status status);
+
+    @Query("SELECT t FROM Ticket t WHERE (t.id = :ticketId)")
+    Ticket findTicketbyTicketId(@Param("ticketId") Long ticketId);
 }
