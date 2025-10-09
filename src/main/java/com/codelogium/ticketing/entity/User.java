@@ -23,12 +23,12 @@ public class User {
 
     @Column(nullable = false, unique = true) // Added unique = true to enforce unique usernames
     @NotBlank(message = "Username cannot be null or blank")
-    @Size(min = 5, max = 16, message = "Username must be between 5 and 8 characters")
+    @Size(min = 5, max = 16, message = "Username must be between 5 and 16 characters")
     private String username;
 
     @Column(nullable = false)
     @NotBlank(message = "Password cannot be null or blank")
-    @Size(min = 5, message = "Password must be at least 6 characters long")
+    @Size(min = 5, message = "Password must be at least 5 characters long")
     private String password;
 
 
