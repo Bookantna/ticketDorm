@@ -61,6 +61,9 @@ public class DataInitializer {
         Room adminRoom = new Room("Staff");
         adminRoom = roomRepository.save(adminRoom);
 
+        Room technicianRoom = new Room("Technician Room");
+        technicianRoom = roomRepository.save(technicianRoom);
+
 // Create admin
 
 
@@ -79,6 +82,21 @@ public class DataInitializer {
         admin.setMemberships(memberships);
         userRepository.save(admin);// optional, to update memberships
 
+
+        User technician = new User("technician","technician","technician@admin.com", UserRole.TECHNICIAN);
+        technician.setPassword(bCryptPasswordEncoder.encode(technician.getPassword()));
+        technician = userRepository.save(technician); // save first
+        userRepository.save(technician);
+
+// Now we can create UserRoom
+        UserRoom technicianRoomAssign = new UserRoom(technician, technicianRoom);
+        technicianRoomAssign = userRoomRepository.save(technicianRoomAssign); // safe to save
+
+// Optionally set back to admin
+        Set<UserRoom> memberships2 = new HashSet<>();
+        memberships2.add(technicianRoomAssign);
+        technician.setMemberships(memberships2);
+        userRepository.save(technician);// optional, to update memberships
 
 
         List<String> roomDescriptions = List.of(
