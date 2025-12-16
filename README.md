@@ -41,7 +41,7 @@ spring-boot:run
 
 1.  Clone the repository:
     ```bash
-    git clone [YOUR_REPOSITORY_LINK]
+    git clone https://github.com/Bookantna/ticketDorm
     cd dormitory-maintenance-system
     ```
 2.  Configure your database settings in `src/main/resources/application.properties`.
