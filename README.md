@@ -33,7 +33,7 @@ spring-boot:run
 
 ### Prerequisites
 
-* Java Development Kit (JDK) [Version]
+* Java Development Kit (JDK) 22
 * Maven or Gradle
 * A running SQL database (e.g., PostgreSQL, MySQL)
 
